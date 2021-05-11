@@ -1,7 +1,7 @@
 <p align="center">
 <a href="https://dotnet.microsoft.com/download/dotnet/5.0" rel="nofollow"><img src="https://img.shields.io/badge/core-v3.1%20%7C%20v5.0-lightgrey.svg?style=flat&amp;logo=.net&amp;logoColor=white" alt="Platform"></a>
 <a href="https://github.com/Roydl/Text/actions/workflows/dotnet.yml"><img src="https://github.com/Roydl/Text/actions/workflows/dotnet.yml/badge.svg" alt="Build"></a>
-<a href="https://github.com/Roydl/Text/commits/master"><img src=" alt="Commits" data-canonical-src="https://img.shields.io/github/last-commit/Roydl/Text.svg?style=flat&amp;logo=github&amp;logoColor=white"></a>
+<a href="https://github.com/Roydl/Text/commits/master"><img src="https://img.shields.io/github/last-commit/Roydl/Text.svg?style=flat&amp;logo=github&amp;logoColor=white" alt="Commits"></a>
 <a href="https://github.com/Roydl/Text/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/Roydl/Text.svg?style=flat" alt="License"></a>
 </p>
 <p align="center">
