@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>Roydl.Text</AssemblyName>
+    <RootNamespace>Roydl.Text</RootNamespace>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Copyright>© Roy Schroedel. All rights reserved.</Copyright>
+    <Company>Roy Schroedel</Company>
+    <Authors>Roy Schroedel</Authors>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Description>Provides functions for encoding and decoding base 2, 8, 10, 16, 32, 64, 85 and 91.</Description>
+    <PackageProjectUrl>https://github.com/Roydl/Text</PackageProjectUrl>
+    <PackageIcon>LOGO.png</PackageIcon>
+    <RepositoryUrl>git://github.com/Roydl/Text</RepositoryUrl>
+    <PackageTags>encoding decoding base2 base8 base10 base16 base32 base64 base85 base91</PackageTags>
+    <RepositoryType></RepositoryType>
+    <SignAssembly>false</SignAssembly>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <PackageId>Roydl.Text</PackageId>
+    <Product>Roydl.Text</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>obj\Debug\Roydl.Text.xml</DocumentationFile>
+    <OutputPath>..\bin\Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>obj\Release\Roydl.Text.xml</DocumentationFile>
+    <OutputPath>..\bin\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Visible>false</Visible>
+    </None>
+    <None Include="..\LOGO.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
