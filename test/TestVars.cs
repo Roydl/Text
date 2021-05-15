@@ -21,8 +21,16 @@
         public const string QuoteStr = "We know what we are, but know not what we may be.";
         public const string TestStr = "Test";
         public static readonly byte[] TestBytes = { 0x54, 0x65, 0x73, 0x74 };
+        private static readonly Random Randomizer = new();
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
+
+        public static byte[] GetRandomBytes()
+        {
+            var bytes = new byte[Randomizer.Next(4096, short.MaxValue)];
+            Randomizer.NextBytes(bytes);
+            return bytes;
+        }
 
         public static string GetTempFilePath(string name)
         {

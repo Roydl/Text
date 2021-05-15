@@ -85,8 +85,7 @@
                     decoded = encoded.DecodeString();
                     break;
                 case TestVarsType.RandomBytes:
-                    original = new byte[short.MaxValue];
-                    new Random().NextBytes((byte[])original);
+                    original = TestVars.GetRandomBytes();
                     encoded = ((byte[])original).Encode();
                     decoded = encoded.Decode();
                     break;
@@ -196,8 +195,7 @@
                     decoded = _instance.DecodeString(encoded);
                     break;
                 case TestVarsType.RandomBytes:
-                    original = new byte[short.MaxValue];
-                    new Random().NextBytes((byte[])original);
+                    original = TestVars.GetRandomBytes();
                     encoded = _instance.EncodeBytes((byte[])original);
                     decoded = _instance.DecodeBytes(encoded);
                     break;
