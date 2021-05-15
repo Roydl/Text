@@ -7,15 +7,15 @@
     using NUnit.Framework;
 
     [TestFixture]
-    [NonParallelizable]
+    [Parallelizable]
     [Platform(Include = TestVars.PlatformInclude)]
     public class Base91Tests
     {
         private const BinToTextEncoding Algorithm = BinToTextEncoding.Base91;
         private const string ExpectedTestEncoded = "\"ONKd";
         private const string ExpectedRangeEncoded = ":C#(:C?hVB$MSiVEwndBAMZRxwFfBB;IW<}YQV!A_v$Y_c%zr4cYQPFl0,@heMAJ<:N[*T+.SFGr*`b4PD}vgYqU>cW0P*1NwV,O{cQ5u0m900[8@n4,wh?DP<2+~jQSW6nmLm1o-J,?jTs%2<WF%qb=oh|}EO6WrCFfk)GH!4EEDmT?yDvcowYe4_-ufO_Y*Ud|l)TH;5RNOVTi5DIdB1<&JR<u5OTbEnz1n)gH}6eWZEV?#D8d15jN4n?u^Otde5.Tp)tHK8rfm=Ui+DVeO!|xL!]uSP,f4;G<q)6HX94ox8W?<D.e&&w{5_6v$T;(@Dgq))[JZ?)E!rii}E:n-wIhRRuv\"TK+PW2I+)DKm@[N.ak?DFjoh18*#nxvZUk-po>$,)QKz[DX_JkiKF|o`5TQT!0vzU!:(6Jf.)dK$]QgG^l?QFwpu!,0%_3v=U}<C=h|:)qK=^dpR&liXFJqH(";
-        private static readonly string TestFileSrcPath = TestVars.GetTempFilePath();
-        private static readonly string TestFileDestPath = TestVars.GetTempFilePath();
+        private static readonly string TestFileSrcPath = TestVars.GetTempFilePath(Algorithm.ToString());
+        private static readonly string TestFileDestPath = TestVars.GetTempFilePath(Algorithm.ToString());
 
         private static readonly TestCaseData[] TestData =
         {
@@ -23,7 +23,8 @@
             new(TestVarsType.TestBytes, ExpectedTestEncoded),
             new(TestVarsType.TestString, ExpectedTestEncoded),
             new(TestVarsType.TestFile, ExpectedTestEncoded),
-            new(TestVarsType.RangeString, ExpectedRangeEncoded)
+            new(TestVarsType.RangeString, ExpectedRangeEncoded),
+            new(TestVarsType.RandomBytes, null)
         };
 
         private static Base91 _instance;
@@ -36,12 +37,13 @@
         }
 
         [OneTimeTearDown]
-        public void CleanUpTestFile()
+        public void CleanUpTestFiles()
         {
-            if (File.Exists(TestFileSrcPath))
-                File.Delete(TestFileSrcPath);
-            if (File.Exists(TestFileDestPath))
-                File.Delete(TestFileDestPath);
+            var dir = Path.GetDirectoryName(TestFileSrcPath);
+            if (dir == null)
+                return;
+            foreach (var file in Directory.GetFiles(dir, $"test-{Algorithm}-*.tmp"))
+                File.Delete(file);
         }
 
         [Test]
@@ -82,10 +84,17 @@
                     encoded = ((string)original).Encode(Algorithm);
                     decoded = encoded.DecodeString(Algorithm);
                     break;
+                case TestVarsType.RandomBytes:
+                    original = new byte[short.MaxValue];
+                    new Random().NextBytes((byte[])original);
+                    encoded = ((byte[])original).Encode(Algorithm);
+                    decoded = encoded.Decode(Algorithm);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(varsType), varsType, null);
             }
-            Assert.AreEqual(expectedEncoded, encoded);
+            if (expectedEncoded != null)
+                Assert.AreEqual(expectedEncoded, encoded);
             Assert.AreEqual(original, decoded);
         }
 
@@ -186,10 +195,17 @@
                     encoded = _instance.EncodeString((string)original);
                     decoded = _instance.DecodeString(encoded);
                     break;
+                case TestVarsType.RandomBytes:
+                    original = new byte[short.MaxValue];
+                    new Random().NextBytes((byte[])original);
+                    encoded = _instance.EncodeBytes((byte[])original);
+                    decoded = _instance.DecodeBytes(encoded);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(varsType), varsType, null);
             }
-            Assert.AreEqual(expectedEncoded, encoded);
+            if (expectedEncoded != null)
+                Assert.AreEqual(expectedEncoded, encoded);
             Assert.AreEqual(original, decoded);
         }
     }

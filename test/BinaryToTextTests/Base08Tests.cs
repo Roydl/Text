@@ -7,15 +7,15 @@
     using NUnit.Framework;
 
     [TestFixture]
-    [NonParallelizable]
+    [Parallelizable]
     [Platform(Include = TestVars.PlatformInclude)]
     public class Base08Tests
     {
         private const BinToTextEncoding Algorithm = BinToTextEncoding.Base08;
         private const string ExpectedTestEncoded = "124145163164";
         private const string ExpectedRangeEncoded = "000001002003004005006007010011012013014015016017020021022023024025026027030031032033034035036037040041042043044045046047050051052053054055056057060061062063064065066067070071072073074075076077100101102103104105106107110111112113114115116117120121122123124125126127130131132133134135136137140141142143144145146147150151152153154155156157160161162163164165166167170171172173174175176177302200302201302202302203302204302205302206302207302210302211302212302213302214302215302216302217302220302221302222302223302224302225302226302227302230302231302232302233302234302235302236302237302240302241302242302243302244302245302246302247302250302251302252302253302254302255302256302257302260302261302262302263302264302265302266302267302270302271302272302273302274302275302276302277303200303201303202303203303204303205303206303207303210303211303212303213303214303215303216303217303220303221303222303223303224303225303226303227303230303231303232303233303234303235303236303237303240303241303242303243303244303245303246303247303250303251303252303253303254303255303256303257303260303261303262303263303264303265303266303267303270303271303272303273303274303275303276";
-        private static readonly string TestFileSrcPath = TestVars.GetTempFilePath();
-        private static readonly string TestFileDestPath = TestVars.GetTempFilePath();
+        private static readonly string TestFileSrcPath = TestVars.GetTempFilePath(Algorithm.ToString());
+        private static readonly string TestFileDestPath = TestVars.GetTempFilePath(Algorithm.ToString());
 
         private static readonly TestCaseData[] TestData =
         {
@@ -23,7 +23,8 @@
             new(TestVarsType.TestBytes, ExpectedTestEncoded),
             new(TestVarsType.TestString, ExpectedTestEncoded),
             new(TestVarsType.TestFile, ExpectedTestEncoded),
-            new(TestVarsType.RangeString, ExpectedRangeEncoded)
+            new(TestVarsType.RangeString, ExpectedRangeEncoded),
+            new(TestVarsType.RandomBytes, null)
         };
 
         private static Base08 _instance;
@@ -36,12 +37,13 @@
         }
 
         [OneTimeTearDown]
-        public void CleanUpTestFile()
+        public void CleanUpTestFiles()
         {
-            if (File.Exists(TestFileSrcPath))
-                File.Delete(TestFileSrcPath);
-            if (File.Exists(TestFileDestPath))
-                File.Delete(TestFileDestPath);
+            var dir = Path.GetDirectoryName(TestFileSrcPath);
+            if (dir == null)
+                return;
+            foreach (var file in Directory.GetFiles(dir, $"test-{Algorithm}-*.tmp"))
+                File.Delete(file);
         }
 
         [Test]
@@ -82,10 +84,17 @@
                     encoded = ((string)original).Encode(Algorithm);
                     decoded = encoded.DecodeString(Algorithm);
                     break;
+                case TestVarsType.RandomBytes:
+                    original = new byte[short.MaxValue];
+                    new Random().NextBytes((byte[])original);
+                    encoded = ((byte[])original).Encode(Algorithm);
+                    decoded = encoded.Decode(Algorithm);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(varsType), varsType, null);
             }
-            Assert.AreEqual(expectedEncoded, encoded);
+            if (expectedEncoded != null)
+                Assert.AreEqual(expectedEncoded, encoded);
             Assert.AreEqual(original, decoded);
         }
 
@@ -186,10 +195,17 @@
                     encoded = _instance.EncodeString((string)original);
                     decoded = _instance.DecodeString(encoded);
                     break;
+                case TestVarsType.RandomBytes:
+                    original = new byte[short.MaxValue];
+                    new Random().NextBytes((byte[])original);
+                    encoded = _instance.EncodeBytes((byte[])original);
+                    decoded = _instance.DecodeBytes(encoded);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(varsType), varsType, null);
             }
-            Assert.AreEqual(expectedEncoded, encoded);
+            if (expectedEncoded != null)
+                Assert.AreEqual(expectedEncoded, encoded);
             Assert.AreEqual(original, decoded);
         }
     }

@@ -11,7 +11,8 @@
         TestString,
         TestFile,
         QuoteString,
-        RangeString
+        RangeString,
+        RandomBytes
     }
 
     public static class TestVars
@@ -23,12 +24,12 @@
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
 
-        public static string GetTempFilePath()
+        public static string GetTempFilePath(string name)
         {
             var dir = Environment.CurrentDirectory;
             if (!Directory.Exists(dir)) // broken dir on some test platforms 
                 dir = AppDomain.CurrentDomain.BaseDirectory;
-            return Path.Combine(dir, $"{Guid.NewGuid()}.tmp");
+            return Path.Combine(dir, $"test-{name}-{Guid.NewGuid()}.tmp");
         }
     }
 }
