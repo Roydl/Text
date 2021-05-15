@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Security.Cryptography;
 
     /// <summary>
@@ -115,7 +116,8 @@
                 int len;
                 while ((len = inputStream.Read(bai, 0, bai.Length)) > 0)
                 {
-                    len = fbt.TransformBlock(bai, 0, len, bao, 0);
+                    var cleaned = bai.Take(len).Where(b => !IsSkippable(b)).ToArray();
+                    len = fbt.TransformBlock(cleaned, 0, cleaned.Length, bao, 0);
                     outputStream.Write(bao, 0, len);
                 }
             }

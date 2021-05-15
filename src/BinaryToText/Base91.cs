@@ -15,7 +15,20 @@
     /// </summary>
     public class Base91 : BinaryToTextEncoding
     {
-        private static readonly byte[] DefCharacterTable91 =
+        /// ReSharper disable CommentTypo
+        /// <summary>
+        ///     Standard 91-character set:
+        ///     <para>
+        ///         <code>
+        ///             ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>
+        ///             abcdefghijklmnopqrstuvwxyz<br/>
+        ///             0123456789!#$%&amp;()*+,-.:;&lt;=<br/>
+        ///             &gt;?@[]^_`{|}~&quot;<br/>
+        ///         </code>
+        ///     </para>
+        /// </summary>
+        /// ReSharper restore CommentTypo
+        protected virtual ReadOnlyMemory<byte> CharacterTable91 { get; } = new byte[]
         {
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
             0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52,
@@ -29,19 +42,6 @@
             0x5b, 0x5d, 0x5e, 0x5f, 0x60, 0x7b, 0x7c, 0x7d, 0x7e,
             0x22
         };
-
-        /// ReSharper disable CommentTypo
-        /// <summary>
-        ///     Standard 91-character set:
-        ///     <para>
-        ///         <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</code>
-        ///     </para>
-        ///     <para>
-        ///         <code>0123456789!#$%&amp;()*+,-.:;&lt;=&gt;?@[]^_`{|}~&quot;</code>
-        ///     </para>
-        /// </summary>
-        /// ReSharper restore CommentTypo
-        protected virtual ReadOnlySpan<byte> CharacterTable91 => DefCharacterTable91;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base91"/> class.
@@ -80,7 +80,7 @@
         /// <exception cref="ObjectDisposedException">
         ///     Methods were called after the inputStream or outputStream was closed.
         /// </exception>
-        public override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
+        public sealed override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
         {
             if (inputStream == null)
                 throw new ArgumentNullException(nameof(inputStream));
@@ -109,14 +109,14 @@
                         eb[1] -= 14;
                         eb[0] >>= 14;
                     }
-                    WriteLine(outputStream, CharacterTable91[eb[2] % 91], lineLength, ref pos);
-                    WriteLine(outputStream, CharacterTable91[eb[2] / 91], lineLength, ref pos);
+                    WriteLine(outputStream, CharacterTable91.Span[eb[2] % 91], lineLength, ref pos);
+                    WriteLine(outputStream, CharacterTable91.Span[eb[2] / 91], lineLength, ref pos);
                 }
                 if (eb[1] == 0)
                     return;
-                WriteLine(outputStream, CharacterTable91[eb[0] % 91], lineLength, ref pos);
+                WriteLine(outputStream, CharacterTable91.Span[eb[0] % 91], lineLength, ref pos);
                 if (eb[1] >= 8 || eb[0] >= 91)
-                    WriteLine(outputStream, CharacterTable91[eb[0] / 91], lineLength, ref pos);
+                    WriteLine(outputStream, CharacterTable91.Span[eb[0] / 91], lineLength, ref pos);
             }
             finally
             {
@@ -156,7 +156,7 @@
         /// <exception cref="ObjectDisposedException">
         ///     Methods were called after the inputStream or outputStream was closed.
         /// </exception>
-        public override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
+        public sealed override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
         {
             if (inputStream == null)
                 throw new ArgumentNullException(nameof(inputStream));
@@ -170,9 +170,9 @@
                 {
                     if (IsSkippable(i))
                         continue;
-                    if (!CharacterTable91.Contains((byte)i))
+                    if (!CharacterTable91.Span.Contains((byte)i))
                         throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)i));
-                    db[0] = CharacterTable91.IndexOf((byte)i);
+                    db[0] = CharacterTable91.Span.IndexOf((byte)i);
                     if (db[0] == -1)
                         continue;
                     if (db[1] < 0)

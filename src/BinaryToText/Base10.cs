@@ -58,13 +58,13 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
-                var p = 0;
+                var pos = 0;
                 int i;
                 while ((i = inputStream.ReadByte()) != -1)
                 {
                     var s = Convert.ToString(i, 10).PadLeft(3, '0');
                     foreach (var b in Encoding.UTF8.GetBytes(s))
-                        WriteLine(outputStream, b, lineLength, ref p);
+                        WriteLine(outputStream, b, lineLength, ref pos);
                 }
             }
             finally
@@ -116,7 +116,7 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
-                var cl = new List<char>();
+                var db = new List<char>();
                 int i;
                 while ((i = inputStream.ReadByte()) != -1)
                 {
@@ -124,11 +124,11 @@
                         continue;
                     if (i is not (>= '0' and <= '9'))
                         throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
-                    cl.Add((char)i);
-                    if (cl.Count % 3 != 0)
+                    db.Add((char)i);
+                    if (db.Count % 3 != 0)
                         continue;
-                    outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 10));
-                    cl.Clear();
+                    outputStream.WriteByte(Convert.ToByte(new string(db.ToArray()), 10));
+                    db.Clear();
                 }
             }
             finally

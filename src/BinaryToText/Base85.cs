@@ -10,9 +10,9 @@
     ///     Provides functionality for encoding data into the Base-85 (also called
     ///     Ascii85) text representation and back.
     /// </summary>
-    public sealed class Base85 : BinaryToTextEncoding
+    public class Base85 : BinaryToTextEncoding
     {
-        private static readonly uint[] DefPow85 =
+        private static ReadOnlyMemory<uint> Pow85 { get; } = new uint[]
         {
             85 * 85 * 85 * 85,
             85 * 85 * 85,
@@ -20,11 +20,6 @@
             85,
             1
         };
-
-        private readonly byte[] _encodeBlock = new byte[5],
-                                _decodeBlock = new byte[4];
-
-        private static ReadOnlySpan<uint> Pow85 => DefPow85;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base85"/> class.
@@ -71,13 +66,14 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
+                var eb = new byte[5];
                 var pos = 0;
                 var t = 0u;
                 var n = 0;
                 int b;
                 while ((b = inputStream.ReadByte()) != -1)
                 {
-                    if (n + 1 < _decodeBlock.Length)
+                    if (n + 1 < 4)
                     {
                         t |= (uint)(b << (24 - n * 8));
                         n++;
@@ -88,26 +84,25 @@
                         WriteLine(outputStream, 0x7a, lineLength, ref pos);
                     else
                     {
-                        for (var i = _encodeBlock.Length - 1; i >= 0; i--)
+                        for (var i = eb.Length - 1; i >= 0; i--)
                         {
-                            _encodeBlock[i] = (byte)(t % 85 + 33);
+                            eb[i] = (byte)(t % 85 + 33);
                             t /= 85;
                         }
-                        foreach (var eb in _encodeBlock)
-                            WriteLine(outputStream, eb, lineLength, ref pos);
+                        WriteLine(outputStream, eb, lineLength, ref pos);
                     }
                     t = 0;
                     n = 0;
                 }
                 if (n <= 0)
                     return;
-                for (var i = _encodeBlock.Length - 1; i >= 0; i--)
+                for (var i = eb.Length - 1; i >= 0; i--)
                 {
-                    _encodeBlock[i] = (byte)(t % 85 + 33);
+                    eb[i] = (byte)(t % 85 + 33);
                     t /= 85;
                 }
                 for (var i = 0; i <= n; i++)
-                    WriteLine(outputStream, _encodeBlock[i], lineLength, ref pos);
+                    WriteLine(outputStream, eb[i], lineLength, ref pos);
             }
             finally
             {
@@ -155,6 +150,7 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
+                var db = new byte[4];
                 var t = 0u;
                 var n = 0;
                 int b;
@@ -164,21 +160,21 @@
                     {
                         if (n != 0)
                             throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, 'z'));
-                        for (var i = 0; i < 4; i++)
-                            _decodeBlock[i] = 0;
-                        outputStream.Write(_decodeBlock, 0, _decodeBlock.Length);
+                        for (var i = 0; i < db.Length; i++)
+                            db[i] = 0;
+                        outputStream.Write(db);
                         continue;
                     }
                     if (IsSkippable(b))
                         continue;
                     if (b is < '!' or > 'u')
                         throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)b));
-                    t += (uint)((b - 33) * Pow85[n]);
-                    if (++n != _encodeBlock.Length)
+                    t += (uint)((b - 33) * Pow85.Span[n]);
+                    if (++n != 5)
                         continue;
-                    for (var i = 0; i < _decodeBlock.Length; i++)
-                        _decodeBlock[i] = (byte)(t >> (24 - i * 8));
-                    outputStream.Write(_decodeBlock, 0, _decodeBlock.Length);
+                    for (var i = 0; i < db.Length; i++)
+                        db[i] = (byte)(t >> (24 - i * 8));
+                    outputStream.Write(db);
                     t = 0;
                     n = 0;
                 }
@@ -188,11 +184,11 @@
                     case 1: throw new DecoderFallbackException(ExceptionMessages.LastBlockIsSingleByte);
                 }
                 n--;
-                t += Pow85[n];
+                t += Pow85.Span[n];
                 for (var i = 0; i < n; i++)
-                    _decodeBlock[i] = (byte)(t >> (24 - i * 8));
+                    db[i] = (byte)(t >> (24 - i * 8));
                 for (var i = 0; i < n; i++)
-                    outputStream.WriteByte(_decodeBlock[i]);
+                    outputStream.WriteByte(db[i]);
             }
             finally
             {

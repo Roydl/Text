@@ -59,13 +59,13 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
-                var p = 0;
+                var pos = 0;
                 int i;
                 while ((i = inputStream.ReadByte()) != -1)
                 {
                     var s = i.ToString("x2", CultureInfo.CurrentCulture).PadLeft(2, '0');
                     foreach (var b in Encoding.UTF8.GetBytes(s))
-                        WriteLine(outputStream, b, lineLength, ref p);
+                        WriteLine(outputStream, b, lineLength, ref pos);
                 }
             }
             finally
@@ -117,19 +117,19 @@
                 throw new ArgumentNullException(nameof(outputStream));
             try
             {
+                var db = new List<char>();
                 int i;
-                var cl = new List<char>();
                 while ((i = inputStream.ReadByte()) != -1)
                 {
                     if (IsSkippable(i, ','))
                         continue;
                     if (i is not (>= '0' and <= '9') and not (>= 'A' and <= 'F') and not (>= 'a' and <= 'f'))
                         throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
-                    cl.Add((char)i);
-                    if (cl.Count % 2 != 0)
+                    db.Add((char)i);
+                    if (db.Count % 2 != 0)
                         continue;
-                    outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 16));
-                    cl.Clear();
+                    outputStream.WriteByte(Convert.ToByte(new string(db.ToArray()), 16));
+                    db.Clear();
                 }
             }
             finally

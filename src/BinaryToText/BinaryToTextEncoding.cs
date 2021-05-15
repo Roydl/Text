@@ -15,10 +15,10 @@
         /// <summary>
         ///     Gets <see cref="Environment.NewLine"/> as a sequence of bytes used as a
         ///     line separator within the
-        ///     <see cref="WriteLine(Stream, byte[], int, int, ref int)"/> and
+        ///     <see cref="WriteLine(Stream, ReadOnlySpan{byte}, int, ref int)"/> and
         ///     <see cref="WriteLine(Stream, byte, int, ref int)"/> methods.
         /// </summary>
-        protected static Memory<byte> Separator { get; } = Encoding.UTF8.GetBytes(Environment.NewLine);
+        protected virtual ReadOnlyMemory<byte> Separator { get; } = Encoding.UTF8.GetBytes(Environment.NewLine);
 
         /// <summary>
         ///     Encodes the specified input stream into the specified output stream.
@@ -313,7 +313,7 @@
         ///     The character to check.
         /// </param>
         /// <param name="additional">
-        ///     Additional characters to be checked.
+        ///     Additional characters to be skipped.
         /// </param>
         /// <returns>
         ///     <see langword="true"/> if the byte number matches one of the characters;
@@ -329,7 +329,7 @@
         /// <param name="stream">
         ///     The stream in which to write the single byte.
         /// </param>
-        /// <param name="buffer">
+        /// <param name="bytes">
         ///     An array of bytes.
         /// </param>
         /// <param name="count">
@@ -347,17 +347,42 @@
         /// <exception cref="ArgumentOutOfRangeException">
         ///     count is below 1.
         /// </exception>
-        protected static void WriteLine(Stream stream, byte[] buffer, int count, int lineLength, ref int linePos)
+        protected void WriteLine(Stream stream, ReadOnlySpan<byte> bytes, int count, int lineLength, ref int linePos)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
             if (count < 1)
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             for (var i = 0; i < count; i++)
-                WriteLine(stream, buffer[i], lineLength, ref linePos);
+                WriteLine(stream, bytes[i], lineLength, ref linePos);
         }
+
+        /// <summary>
+        ///     Write the specified byte into the stream and add a line separator depending
+        ///     on the specified line length.
+        /// </summary>
+        /// <param name="stream">
+        ///     The stream in which to write the single byte.
+        /// </param>
+        /// <param name="bytes">
+        ///     An array of bytes.
+        /// </param>
+        /// <param name="lineLength">
+        ///     The length of lines.
+        /// </param>
+        /// <param name="linePos">
+        ///     The position in the line.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stream or buffer is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     count is below 1.
+        /// </exception>
+        protected void WriteLine(Stream stream, ReadOnlySpan<byte> bytes, int lineLength, ref int linePos) =>
+            WriteLine(stream, bytes, bytes.Length, lineLength, ref linePos);
 
         /// <summary>
         ///     Write the specified byte into the stream and add a line separator depending
@@ -378,12 +403,12 @@
         /// <exception cref="ArgumentNullException">
         ///     stream is null.
         /// </exception>
-        protected static void WriteLine(Stream stream, byte value, int lineLength, ref int linePos)
+        protected void WriteLine(Stream stream, byte value, int lineLength, ref int linePos)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
             stream.WriteByte(value);
-            if (lineLength < 1 || ++linePos < lineLength)
+            if (Separator.IsEmpty || lineLength < 1 || ++linePos < lineLength)
                 return;
             linePos = 0;
             stream.Write(Separator.Span);
