@@ -1,6 +1,7 @@
 ﻿namespace Roydl.Text.BinaryToText
 {
     using System;
+    using System.Threading;
 
     /// <summary>
     ///     Specifies enumerated constants used to encode and decode data.
@@ -53,44 +54,7 @@
     /// </summary>
     public static class BinaryToTextExtensions
     {
-        private static BinaryToTextEncoding[] _defaultInstances;
-
-        private static ReadOnlySpan<BinaryToTextEncoding> DefaultInstances
-        {
-            get
-            {
-                if (_defaultInstances != null)
-                    return _defaultInstances;
-                _defaultInstances = new BinaryToTextEncoding[]
-                {
-                    new Base02(),
-                    new Base08(),
-                    new Base10(),
-                    new Base16(),
-                    new Base32(),
-                    new Base64(),
-                    new Base85(),
-                    new Base91()
-                };
-                return _defaultInstances;
-            }
-        }
-
-        /// <summary>
-        ///     Retrieves a static default instance of the specified encoder.
-        /// </summary>
-        /// <param name="encoder">
-        /// </param>
-        /// <returns>
-        ///     A static default instance of the specified encoder.
-        /// </returns>
-        public static BinaryToTextEncoding GetDefaultInstance(this BinToTextEncoding encoder)
-        {
-            var i = (int)encoder;
-            if (i > DefaultInstances.Length)
-                throw new ArgumentOutOfRangeException(nameof(encoder));
-            return DefaultInstances[i];
-        }
+        private static volatile BinaryToTextEncoding[] _cachedInstances;
 
         /// <summary>
         ///     Encodes this sequence of bytes with the specified encoder.
@@ -187,5 +151,34 @@
         /// </returns>
         public static byte[] DecodeFile(this string path, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
             encoder.GetDefaultInstance().DecodeFile(path);
+
+        /// <summary>
+        ///     Retrieves a cached instance of the specified encoder.
+        /// </summary>
+        /// <param name="encoder">
+        /// </param>
+        /// <returns>
+        ///     A cached instance of the specified encoder.
+        /// </returns>
+        public static BinaryToTextEncoding GetDefaultInstance(this BinToTextEncoding encoder)
+        {
+            var i = (int)encoder;
+            while (_cachedInstances == null)
+                Interlocked.CompareExchange(ref _cachedInstances, new BinaryToTextEncoding[Enum.GetValues(typeof(BinToTextEncoding)).Length], null);
+            while (_cachedInstances[i] == null)
+                Interlocked.CompareExchange(ref _cachedInstances[i], encoder switch
+                {
+                    BinToTextEncoding.Base02 => new Base02(),
+                    BinToTextEncoding.Base08 => new Base08(),
+                    BinToTextEncoding.Base10 => new Base10(),
+                    BinToTextEncoding.Base16 => new Base16(),
+                    BinToTextEncoding.Base32 => new Base32(),
+                    BinToTextEncoding.Base64 => new Base64(),
+                    BinToTextEncoding.Base85 => new Base85(),
+                    BinToTextEncoding.Base91 => new Base91(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(encoder), encoder, null)
+                }, null);
+            return _cachedInstances[i];
+        }
     }
 }
