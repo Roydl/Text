@@ -10,47 +10,47 @@
         /// <summary>
         ///     Boundary Neutral [BN].
         /// </summary>
-        BoundaryNeutral = 4,
+        BoundaryNeutral = TextWhiteSpace.BoundaryNeutral,
 
         /// <summary>
         ///     Carriage Return [CR].
         /// </summary>
-        CarriageReturn = 5,
+        CarriageReturn = TextWhiteSpace.CarriageReturn,
 
         /// <summary>
         ///     Form Feed [FF].
         /// </summary>
-        FormFeed = 6,
+        FormFeed = TextWhiteSpace.FormFeed,
 
         /// <summary>
         ///     Line Feed [LF].
         /// </summary>
-        LineFeed = 7,
+        LineFeed = TextWhiteSpace.LineFeed,
 
         /// <summary>
         ///     Line Separator.
         /// </summary>
-        LineSeparator = 8,
+        LineSeparator = TextWhiteSpace.LineSeparator,
 
         /// <summary>
         ///     Next Line [NEL].
         /// </summary>
-        NextLine = 9,
+        NextLine = TextWhiteSpace.NextLine,
 
         /// <summary>
         ///     Paragraph Separator [B].
         /// </summary>
-        ParagraphSeparator = 10,
+        ParagraphSeparator = TextWhiteSpace.ParagraphSeparator,
 
         /// <summary>
         ///     Vertical Tab [VT].
         /// </summary>
-        VerticalTab = 11,
+        VerticalTab = TextWhiteSpace.VerticalTab,
 
         /// <summary>
         ///     Carriage Return [CR] &amp; Line Feed [LF].
         /// </summary>
-        WindowsDefault = 12
+        WindowsDefault = TextWhiteSpace.WindowsDefault
     }
 
     /// <summary>
@@ -61,62 +61,62 @@
         /// <summary>
         ///     Common Number Separator [CS].
         /// </summary>
-        CommonNumberSeparator = 1,
+        CommonNumberSeparator,
 
         /// <summary>
         ///     Horizontal Tab [TAB].
         /// </summary>
-        HorizontalTab = 2,
+        HorizontalTab,
 
         /// <summary>
         ///     Space.
         /// </summary>
-        Space = 3,
+        Space,
 
         /// <summary>
         ///     Boundary Neutral [BN].
         /// </summary>
-        BoundaryNeutral = 4,
+        BoundaryNeutral,
 
         /// <summary>
         ///     Carriage Return [CR].
         /// </summary>
-        CarriageReturn = 5,
+        CarriageReturn,
 
         /// <summary>
         ///     Form Feed [FF].
         /// </summary>
-        FormFeed = 6,
+        FormFeed,
 
         /// <summary>
         ///     Line Feed [LF].
         /// </summary>
-        LineFeed = 7,
+        LineFeed,
 
         /// <summary>
         ///     Line Separator.
         /// </summary>
-        LineSeparator = 8,
+        LineSeparator,
 
         /// <summary>
         ///     Next Line [NEL].
         /// </summary>
-        NextLine = 9,
+        NextLine,
 
         /// <summary>
         ///     Paragraph Separator [B].
         /// </summary>
-        ParagraphSeparator = 10,
+        ParagraphSeparator,
 
         /// <summary>
         ///     Vertical Tab [VT].
         /// </summary>
-        VerticalTab = 11,
+        VerticalTab,
 
         /// <summary>
         ///     Carriage Return [CR] &amp; Line Feed [LF].
         /// </summary>
-        WindowsDefault = 12
+        WindowsDefault
     }
 
     /// <summary>
