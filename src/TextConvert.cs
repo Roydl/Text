@@ -37,9 +37,6 @@
         /// <param name="ch">
         ///     The character to convert.
         /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     text is null.
-        /// </exception>
         /// <returns>
         ///     A converted ASCII letter or the original character.
         /// </returns>
