@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        ///     Rotates the specified letter by 13 characters if it is an ASCII letter,
+        ///     Rotates the specified character by 13 characters if it is an ASCII letter,
         ///     otherwise the original character is returned.
         /// </summary>
         /// <param name="ch">
