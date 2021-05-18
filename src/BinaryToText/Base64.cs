@@ -59,10 +59,10 @@
             {
                 using var cs = new CryptoStream(inputStream, new ToBase64Transform(), CryptoStreamMode.Read, true);
                 var pos = 0;
-                var buf = new byte[16384];
+                var ba = new byte[16384];
                 int len;
-                while ((len = cs.Read(buf, 0, buf.Length)) > 0)
-                    WriteLine(outputStream, buf, len, lineLength, ref pos);
+                while ((len = cs.Read(ba, 0, ba.Length)) > 0)
+                    WriteLine(outputStream, ba, len, lineLength, ref pos);
             }
             finally
             {
