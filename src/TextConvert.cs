@@ -162,8 +162,8 @@
         }
 
         /// <summary>
-        ///     Converts all line separator characters of the specified input stream into
-        ///     the specified output stream.
+        ///     Converts all line separator characters of the specified source file to the
+        ///     specified destination file.
         /// </summary>
         /// <param name="srcPath">
         ///     The source file to convert.
