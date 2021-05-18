@@ -319,10 +319,6 @@
         /// <param name="separator">
         ///     The value that determines the separator.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     separator is <see cref="TextNewLine.WindowsDefault"/>, which cannot be a
-        ///     single character.
-        /// </exception>
         /// <returns>
         ///     A string that represents a line separator character.
         /// </returns>
@@ -347,10 +343,6 @@
         /// <param name="separator">
         ///     The value that determines the separator.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     separator is <see cref="TextWhiteSpace.WindowsDefault"/>, which cannot be a
-        ///     single character.
-        /// </exception>
         /// <returns>
         ///     A string that represents a whitespace character.
         /// </returns>
