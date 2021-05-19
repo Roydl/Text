@@ -19,37 +19,7 @@
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base02() { }
 
-        /// <summary>
-        ///     Encodes the specified input stream into the specified output stream.
-        /// </summary>
-        /// <param name="inputStream">
-        ///     The input stream to encode.
-        /// </param>
-        /// <param name="outputStream">
-        ///     The output stream for encoding.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        /// <param name="dispose">
-        ///     <see langword="true"/> to release all resources used by the input and
-        ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     inputStream or outputStream is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     inputStream or outputStream is invalid.
-        /// </exception>
-        /// <exception cref="NotSupportedException">
-        ///     inputStream is not readable -or- outputStream is not writable.
-        /// </exception>
-        /// <exception cref="IOException">
-        ///     An I/O error occurred, such as the specified file cannot be found.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///     Methods were called after the inputStream or outputStream was closed.
-        /// </exception>
+        /// <inheritdoc/>
         public override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
         {
             if (inputStream == null)
@@ -77,37 +47,7 @@
             }
         }
 
-        /// <summary>
-        ///     Decodes the specified input stream into the specified output stream.
-        /// </summary>
-        /// <param name="inputStream">
-        ///     The input stream to decode.
-        /// </param>
-        /// <param name="outputStream">
-        ///     The output stream for decoding.
-        /// </param>
-        /// <param name="dispose">
-        ///     <see langword="true"/> to release all resources used by the input and
-        ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     inputStream or outputStream is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     inputStream or outputStream is invalid.
-        /// </exception>
-        /// <exception cref="DecoderFallbackException">
-        ///     inputStream contains invalid characters.
-        /// </exception>
-        /// <exception cref="NotSupportedException">
-        ///     inputStream is not readable -or- outputStream is not writable.
-        /// </exception>
-        /// <exception cref="IOException">
-        ///     An I/O error occurred, such as the specified file cannot be found.
-        /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        ///     Methods were called after the inputStream or outputStream was closed.
-        /// </exception>
+        /// <inheritdoc/>
         public override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
         {
             if (inputStream == null)

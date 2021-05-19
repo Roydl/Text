@@ -76,6 +76,21 @@
         ///     <see langword="true"/> to release all resources used by the input and
         ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     inputStream or outputStream is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     inputStream or outputStream is invalid.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     inputStream is not readable -or- outputStream is not writable.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occurs, such as the stream is closed.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     Methods were called after the inputStream or outputStream was closed.
+        /// </exception>
         public static void FormatSeparators(StreamReader inputStream, StreamWriter outputStream, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool dispose = false)
         {
             if (inputStream == null)
@@ -118,27 +133,7 @@
             }
         }
 
-        /// <summary>
-        ///     Converts all line separator characters of the specified input stream into
-        ///     the specified output stream.
-        /// </summary>
-        /// <param name="inputStream">
-        ///     The input stream to convert.
-        /// </param>
-        /// <param name="outputStream">
-        ///     The output stream for converting.
-        /// </param>
-        /// <param name="separator">
-        ///     The new format to be applied.
-        /// </param>
-        /// <param name="maxInRow">
-        ///     The maximum number of separators in a row. If the value is 0, all
-        ///     separators are removed, if it is negative, this function is ignored.
-        /// </param>
-        /// <param name="dispose">
-        ///     <see langword="true"/> to release all resources used by the input and
-        ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
-        /// </param>
+        /// <inheritdoc cref="FormatSeparators(StreamReader, StreamWriter, TextNewLine, int, bool)"/>
         public static void FormatSeparators(Stream inputStream, Stream outputStream, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool dispose = false)
         {
             if (inputStream == null)
@@ -195,6 +190,9 @@
         /// <exception cref="DirectoryNotFoundException">
         ///     destPath is invalid.
         /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occurred, such as the specified file cannot be found.
+        /// </exception>
         public static bool FormatSeparators(string srcPath, string destPath, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool overwrite = true)
         {
             if (srcPath == null)
@@ -225,10 +223,16 @@
         ///     The maximum number of separators in a row. If the value is 0, all
         ///     separators are removed, if it is negative, this function is ignored.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     text is null.
+        /// </exception>
+        /// <inheritdoc cref="FormatSeparators(StreamReader, StreamWriter, TextNewLine, int, bool)"/>
         public static string FormatSeparators(string text, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
+            if (text == string.Empty)
+                return text;
             using var msi = new MemoryStream(Encoding.UTF8.GetBytes(text));
             using var mso = new MemoryStream();
             FormatSeparators(msi, mso, separator, maxInRow);

@@ -89,22 +89,5 @@
             }
             return false;
         }
-
-        /// <summary>
-        ///     Indicates whether the specified character is categorized as whitespace.
-        ///     <para>
-        ///         Please note that this method only calls
-        ///         <see cref="char.IsWhiteSpace(char)"/>.
-        ///     </para>
-        /// </summary>
-        /// <param name="ch">
-        ///     The character to evaluate.
-        /// </param>
-        /// <returns>
-        ///     <see langword="true"/> if <paramref name="ch"/> is whitespace; otherwise,
-        ///     <see langword="false"/>.
-        /// </returns>
-        public static bool IsWhiteSpace(char ch) =>
-            char.IsWhiteSpace(ch);
     }
 }
