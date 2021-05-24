@@ -21,6 +21,7 @@
     <Version>1.0.0</Version>
     <PackageId>Roydl.Text</PackageId>
     <Product>Roydl.Text</Product>
+    <AppDesignerFolder>Resources</AppDesignerFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\ExceptionMessages.Designer.cs">
+    <Compile Update="Resources\ExceptionMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ExceptionMessages.resx</DependentUpon>
@@ -55,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\ExceptionMessages.resx">
+    <EmbeddedResource Update="Resources\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>

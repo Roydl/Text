@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Roydl.Text.Properties {
+namespace Roydl.Text.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Roydl.Text.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Roydl.Text.Properties.ExceptionMessages", typeof(ExceptionMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Roydl.Text.Resources.ExceptionMessages", typeof(ExceptionMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

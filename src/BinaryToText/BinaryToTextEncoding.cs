@@ -4,7 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Properties;
+    using Resources;
 
     /// <summary>
     ///     Represents the base class from which all implementations of binary-to-text
@@ -15,7 +15,7 @@
         /// <summary>
         ///     Gets <see cref="Environment.NewLine"/> as a sequence of bytes used as a
         ///     line separator within the
-        ///     <see cref="WriteLine(Stream, ReadOnlySpan{byte}, int, ref int)"/> and
+        ///     <see cref="WriteLine(Stream, Span{byte}, int, int, ref int)"/> and
         ///     <see cref="WriteLine(Stream, byte, int, ref int)"/> methods.
         /// </summary>
         protected virtual ReadOnlyMemory<byte> Separator { get; } = Encoding.UTF8.GetBytes(Environment.NewLine);
@@ -357,7 +357,7 @@
         }
 
         /// <summary>
-        ///     Determines whether the specified character can be ignored.
+        ///     Determines whether the specified value can be ignored.
         /// </summary>
         /// <param name="value">
         ///     The character to check.
@@ -380,7 +380,7 @@
         ///     The stream in which to write the single byte.
         /// </param>
         /// <param name="bytes">
-        ///     An sequence of bytes.
+        ///     A sequence of bytes.
         /// </param>
         /// <param name="count">
         ///     The number of bytes to be written to the current stream.
@@ -392,25 +392,23 @@
         ///     The current position in the line.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     stream or buffer is null.
+        ///     stream is null.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     count is less than 1.
+        ///     count is less than 1, or greater than size of bytes.
         /// </exception>
-        protected void WriteLine(Stream stream, ReadOnlySpan<byte> bytes, int count, int lineLength, ref int linePos)
+        protected void WriteLine(Stream stream, Span<byte> bytes, int count, int lineLength, ref int linePos)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            if (bytes == null)
-                throw new ArgumentNullException(nameof(bytes));
-            if (count < 1)
+            if (count < 1 || count > bytes.Length)
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             for (var i = 0; i < count; i++)
                 WriteLine(stream, bytes[i], lineLength, ref linePos);
         }
 
-        /// <inheritdoc cref="WriteLine(Stream, ReadOnlySpan{byte}, int, int, ref int)"/>
-        protected void WriteLine(Stream stream, ReadOnlySpan<byte> bytes, int lineLength, ref int linePos) =>
+        /// <inheritdoc cref="WriteLine(Stream, Span{byte}, int, int, ref int)"/>
+        protected void WriteLine(Stream stream, Span<byte> bytes, int lineLength, ref int linePos) =>
             WriteLine(stream, bytes, bytes.Length, lineLength, ref linePos);
 
         /// <summary>

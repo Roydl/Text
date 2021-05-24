@@ -25,9 +25,15 @@
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
 
-        public static byte[] GetRandomBytes()
+        public static byte[] GetRandomBytes(int size = 0)
         {
-            var bytes = new byte[Randomizer.Next(4096, short.MaxValue)];
+            if (size < 1)
+            {
+                size = Randomizer.Next(byte.MaxValue, short.MaxValue);
+                if (size % 2 == 0)
+                    --size;
+            }
+            var bytes = new byte[size];
             Randomizer.NextBytes(bytes);
             return bytes;
         }

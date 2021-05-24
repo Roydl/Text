@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Text.csproj" />
+    <ProjectReference Include="..\src\Roydl.Text.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31213.239
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{1A56E219-32AA-48A0-B6F6-33E10D44E0D4}") = "Text", "src\Text.csproj", "{D94B39E9-E923-4347-95CE-992E196853BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roydl.Text", "src\Roydl.Text.csproj", "{D94B39E9-E923-4347-95CE-992E196853BE}"
 EndProject
-Project("{FC7AEAEA-B27D-4A15-B781-06A3574E4F02}") = "Text.Test", "test\Text.Test.csproj", "{EA65D84F-012B-4A83-9471-4DEB0923D081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roydl.Text.Test", "test\Roydl.Text.Test.csproj", "{EA65D84F-012B-4A83-9471-4DEB0923D081}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

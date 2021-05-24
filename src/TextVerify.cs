@@ -62,10 +62,10 @@
 
         /// <summary>
         ///     Indicates whether the specified character is categorized as line separator.
-        ///     <para>
-        ///         See <see cref="TextNewLine"/> for more information.
-        ///     </para>
         /// </summary>
+        /// <remarks>
+        ///     See <seealso cref="TextNewLine"/> for more information.
+        /// </remarks>
         /// <param name="ch">
         ///     The character to evaluate.
         /// </param>

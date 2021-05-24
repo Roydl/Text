@@ -4,7 +4,8 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Properties;
+    using Internal;
+    using Resources;
 
     /// <summary>
     ///     Provides static methods for converting text.
@@ -100,15 +101,15 @@
             try
             {
                 var newLine = TextSeparator.GetSeparator(separator);
-                var isCrLf = IsCrLf(inputStream.BaseStream);
+                var isCrLf = LocalIsCrLf(inputStream.BaseStream);
                 var inRow = 0;
-                var ba = new char[16384];
+                var span = new char[Helper.GetBufferSize(inputStream)].AsSpan();
                 int len;
-                while ((len = inputStream.Read(ba, 0, ba.Length)) > 0)
+                while ((len = inputStream.Read(span)) > 0)
                 {
                     for (var i = 0; i < len; i++)
                     {
-                        var c = ba[i];
+                        var c = span[i];
                         if (isCrLf && c == TextSeparator.CarriageReturnChar)
                             continue;
                         if (TextVerify.IsLineSeparator(c))
@@ -119,7 +120,7 @@
                         }
                         if (inRow > 0)
                             inRow = 0;
-                        outputStream.Write(ba[i]);
+                        outputStream.Write(span[i]);
                     }
                 }
             }
@@ -130,6 +131,34 @@
                     inputStream.Dispose();
                     outputStream.Dispose();
                 }
+            }
+
+            static bool LocalIsCrLf(Stream stream)
+            {
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
+                var bs = new BufferedStream(stream, Helper.GetBufferSize(stream));
+                var pos = bs.Position;
+                var crLf = 0;
+                try
+                {
+                    int i;
+                    while ((i = bs.ReadByte()) != -1)
+                    {
+                        if (crLf > 0 && i == TextSeparator.LineFeedChar)
+                        {
+                            crLf++;
+                            break;
+                        }
+                        crLf = i == TextSeparator.CarriageReturnChar ? 1 : 0;
+                    }
+                }
+                finally
+                {
+                    bs.Position = pos;
+                    bs.Flush();
+                }
+                return crLf > 1;
             }
         }
 
@@ -229,34 +258,17 @@
         /// <inheritdoc cref="FormatSeparators(StreamReader, StreamWriter, TextNewLine, int, bool)"/>
         public static string FormatSeparators(string text, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (text == string.Empty)
-                return text;
+            switch (text)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(text));
+                case "":
+                    return text;
+            }
             using var msi = new MemoryStream(Encoding.UTF8.GetBytes(text));
             using var mso = new MemoryStream();
             FormatSeparators(msi, mso, separator, maxInRow);
             return Encoding.UTF8.GetString(mso.ToArray());
-        }
-
-        private static bool IsCrLf(Stream stream)
-        {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            var pos = stream.Position;
-            var crLf = 0;
-            int i;
-            while ((i = stream.ReadByte()) != -1)
-            {
-                if (crLf > 0 && i == TextSeparator.LineFeedChar)
-                {
-                    crLf++;
-                    break;
-                }
-                crLf = i == TextSeparator.CarriageReturnChar ? 1 : 0;
-            }
-            stream.Position = pos;
-            return crLf > 1;
         }
     }
 }
