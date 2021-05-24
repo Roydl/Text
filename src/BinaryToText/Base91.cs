@@ -4,15 +4,16 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Properties;
+    using Internal;
+    using Resources;
 
     /// <summary>
     ///     Provides functionality for encoding data into the Base-91 (formerly written
     ///     basE91) text representation and back.
-    ///     <para>
-    ///         See more: <see href="http://base91.sourceforge.net/"/>.
-    ///     </para>
     /// </summary>
+    /// <remarks>
+    ///     See more: <seealso href="http://base91.sourceforge.net/"/>.
+    /// </remarks>
     public class Base91 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
@@ -28,7 +29,7 @@
         ///     </para>
         /// </summary>
         /// ReSharper restore CommentTypo
-        protected virtual ReadOnlyMemory<byte> CharacterTable91 { get; } = new byte[]
+        protected static readonly byte[] DefCharacterTable91 =
         {
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
             0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52,
@@ -43,6 +44,9 @@
             0x22
         };
 
+        /// <inheritdoc cref="DefCharacterTable91"/>
+        protected virtual ReadOnlySpan<byte> CharacterTable91 => DefCharacterTable91;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base91"/> class.
         /// </summary>
@@ -56,12 +60,14 @@
                 throw new ArgumentNullException(nameof(inputStream));
             if (outputStream == null)
                 throw new ArgumentNullException(nameof(outputStream));
+            var bsi = Helper.GetBufferedStream(inputStream);
+            var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
             {
+                var eb = new int[3].AsSpan();
                 var pos = 0;
-                var eb = new int[3];
                 int i;
-                while ((i = inputStream.ReadByte()) != -1)
+                while ((i = bsi.ReadByte()) != -1)
                 {
                     eb[0] |= i << eb[1];
                     eb[1] += 8;
@@ -79,21 +85,26 @@
                         eb[1] -= 14;
                         eb[0] >>= 14;
                     }
-                    WriteLine(outputStream, CharacterTable91.Span[eb[2] % 91], lineLength, ref pos);
-                    WriteLine(outputStream, CharacterTable91.Span[eb[2] / 91], lineLength, ref pos);
+                    WriteLine(bso, CharacterTable91[eb[2] % 91], lineLength, ref pos);
+                    WriteLine(bso, CharacterTable91[eb[2] / 91], lineLength, ref pos);
                 }
                 if (eb[1] == 0)
                     return;
-                WriteLine(outputStream, CharacterTable91.Span[eb[0] % 91], lineLength, ref pos);
+                WriteLine(bso, CharacterTable91[eb[0] % 91], lineLength, ref pos);
                 if (eb[1] >= 8 || eb[0] >= 91)
-                    WriteLine(outputStream, CharacterTable91.Span[eb[0] / 91], lineLength, ref pos);
+                    WriteLine(bso, CharacterTable91[eb[0] / 91], lineLength, ref pos);
             }
             finally
             {
                 if (dispose)
                 {
-                    inputStream.Dispose();
-                    outputStream.Dispose();
+                    bsi.Dispose();
+                    bso.Dispose();
+                }
+                else
+                {
+                    bsi.Flush();
+                    bso.Flush();
                 }
             }
         }
@@ -105,17 +116,19 @@
                 throw new ArgumentNullException(nameof(inputStream));
             if (outputStream == null)
                 throw new ArgumentNullException(nameof(outputStream));
+            var bsi = Helper.GetBufferedStream(inputStream);
+            var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
             {
-                var db = new[] { 0, -1, 0, 0 };
+                var db = new[] { 0, -1, 0, 0 }.AsSpan();
                 int i;
-                while ((i = inputStream.ReadByte()) != -1)
+                while ((i = bsi.ReadByte()) != -1)
                 {
                     if (IsSkippable(i))
                         continue;
-                    if (!CharacterTable91.Span.Contains((byte)i))
+                    if (!CharacterTable91.Contains((byte)i))
                         throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)i));
-                    db[0] = CharacterTable91.Span.IndexOf((byte)i);
+                    db[0] = CharacterTable91.IndexOf((byte)i);
                     if (db[0] == -1)
                         continue;
                     if (db[1] < 0)
@@ -128,7 +141,7 @@
                     db[3] += (db[1] & 8191) > 88 ? 13 : 14;
                     do
                     {
-                        outputStream.WriteByte((byte)(db[2] & byte.MaxValue));
+                        bso.WriteByte((byte)(db[2] & byte.MaxValue));
                         db[2] >>= 8;
                         db[3] -= 8;
                     }
@@ -136,14 +149,19 @@
                     db[1] = -1;
                 }
                 if (db[1] != -1)
-                    outputStream.WriteByte((byte)((db[2] | (db[1] << db[3])) & byte.MaxValue));
+                    bso.WriteByte((byte)((db[2] | (db[1] << db[3])) & byte.MaxValue));
             }
             finally
             {
                 if (dispose)
                 {
-                    inputStream.Dispose();
-                    outputStream.Dispose();
+                    bsi.Dispose();
+                    bso.Dispose();
+                }
+                else
+                {
+                    bsi.Flush();
+                    bso.Flush();
                 }
             }
         }

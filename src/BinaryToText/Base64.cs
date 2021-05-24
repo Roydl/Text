@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
+    using Internal;
 
     /// <summary>
     ///     Provides functionality for encoding data into the Base-64 text
@@ -29,9 +30,9 @@
             {
                 using var cs = new CryptoStream(inputStream, new ToBase64Transform(), CryptoStreamMode.Read, true);
                 var pos = 0;
-                var ba = new byte[16384];
+                var ba = new byte[Helper.GetBufferSize(inputStream)];
                 int len;
-                while ((len = cs.Read(ba, 0, ba.Length)) > 0)
+                while ((len = cs.Read(ba)) > 0)
                     WriteLine(outputStream, ba, len, lineLength, ref pos);
             }
             finally
@@ -54,10 +55,11 @@
             try
             {
                 using var fbt = new FromBase64Transform();
-                var bai = new byte[16384];
-                var bao = new byte[bai.Length];
+                var size = Helper.GetBufferSize(inputStream);
+                var bai = new byte[size];
+                var bao = new byte[size];
                 int len;
-                while ((len = inputStream.Read(bai, 0, bai.Length)) > 0)
+                while ((len = inputStream.Read(bai)) > 0)
                 {
                     var cleaned = bai.Take(len).Where(b => !IsSkippable(b)).ToArray();
                     len = fbt.TransformBlock(cleaned, 0, cleaned.Length, bao, 0);

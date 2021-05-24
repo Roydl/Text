@@ -4,15 +4,16 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Properties;
+    using Internal;
+    using Resources;
 
     /// <summary>
     ///     Provides functionality for encoding data into the Base-85 (also called
     ///     Ascii85) text representation and back.
     /// </summary>
-    public class Base85 : BinaryToTextEncoding
+    public sealed class Base85 : BinaryToTextEncoding
     {
-        private static ReadOnlyMemory<uint> Pow85 { get; } = new uint[]
+        private static readonly uint[] DefPow85 =
         {
             85 * 85 * 85 * 85,
             85 * 85 * 85,
@@ -20,6 +21,8 @@
             85,
             1
         };
+
+        private static ReadOnlySpan<uint> Pow85 => DefPow85;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base85"/> class.
@@ -34,14 +37,16 @@
                 throw new ArgumentNullException(nameof(inputStream));
             if (outputStream == null)
                 throw new ArgumentNullException(nameof(outputStream));
+            var bsi = Helper.GetBufferedStream(inputStream);
+            var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
             {
-                var eb = new byte[5];
+                var eb = new byte[5].AsSpan();
                 var pos = 0;
                 var t = 0u;
                 var n = 0;
                 int b;
-                while ((b = inputStream.ReadByte()) != -1)
+                while ((b = bsi.ReadByte()) != -1)
                 {
                     if (n + 1 < 4)
                     {
@@ -51,7 +56,7 @@
                     }
                     t |= (uint)b;
                     if (t == 0)
-                        WriteLine(outputStream, 0x7a, lineLength, ref pos);
+                        WriteLine(bso, 0x7a, lineLength, ref pos);
                     else
                     {
                         for (var i = eb.Length - 1; i >= 0; i--)
@@ -59,7 +64,7 @@
                             eb[i] = (byte)(t % 85 + 33);
                             t /= 85;
                         }
-                        WriteLine(outputStream, eb, lineLength, ref pos);
+                        WriteLine(bso, eb, lineLength, ref pos);
                     }
                     t = 0;
                     n = 0;
@@ -72,14 +77,19 @@
                     t /= 85;
                 }
                 for (var i = 0; i <= n; i++)
-                    WriteLine(outputStream, eb[i], lineLength, ref pos);
+                    WriteLine(bso, eb[i], lineLength, ref pos);
             }
             finally
             {
                 if (dispose)
                 {
-                    inputStream.Dispose();
-                    outputStream.Dispose();
+                    bsi.Dispose();
+                    bso.Dispose();
+                }
+                else
+                {
+                    bsi.Flush();
+                    bso.Flush();
                 }
             }
         }
@@ -91,13 +101,15 @@
                 throw new ArgumentNullException(nameof(inputStream));
             if (outputStream == null)
                 throw new ArgumentNullException(nameof(outputStream));
+            var bsi = Helper.GetBufferedStream(inputStream);
+            var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
             {
-                var db = new byte[4];
+                var db = new byte[4].AsSpan();
                 var t = 0u;
                 var n = 0;
                 int b;
-                while ((b = inputStream.ReadByte()) != -1)
+                while ((b = bsi.ReadByte()) != -1)
                 {
                     if (b == 'z')
                     {
@@ -105,19 +117,19 @@
                             throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, 'z'));
                         for (var i = 0; i < db.Length; i++)
                             db[i] = 0;
-                        outputStream.Write(db);
+                        bso.Write(db);
                         continue;
                     }
                     if (IsSkippable(b))
                         continue;
                     if (b is < '!' or > 'u')
                         throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)b));
-                    t += (uint)((b - 33) * Pow85.Span[n]);
+                    t += (uint)((b - 33) * Pow85[n]);
                     if (++n != 5)
                         continue;
                     for (var i = 0; i < db.Length; i++)
                         db[i] = (byte)(t >> (24 - i * 8));
-                    outputStream.Write(db);
+                    bso.Write(db);
                     t = 0;
                     n = 0;
                 }
@@ -127,18 +139,23 @@
                     case 1: throw new DecoderFallbackException(ExceptionMessages.LastBlockIsSingleByte);
                 }
                 n--;
-                t += Pow85.Span[n];
+                t += Pow85[n];
                 for (var i = 0; i < n; i++)
                     db[i] = (byte)(t >> (24 - i * 8));
                 for (var i = 0; i < n; i++)
-                    outputStream.WriteByte(db[i]);
+                    bso.WriteByte(db[i]);
             }
             finally
             {
                 if (dispose)
                 {
-                    inputStream.Dispose();
-                    outputStream.Dispose();
+                    bsi.Dispose();
+                    bso.Dispose();
+                }
+                else
+                {
+                    bsi.Flush();
+                    bso.Flush();
                 }
             }
         }
