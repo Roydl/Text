@@ -38,7 +38,6 @@ You can easily create instances of any type to translate `Stream`, `byte[]` or `
 
 ### Usage:
 ```cs
-using  Roydl.Text.BinaryToText;
 // The `value` must be type `string` or `byte[]`, if `BinToTextEncoding` is
 // not set, `Base64` is used by default.
 string base85text = value.Encode(BinToTextEncoding.Base85);
