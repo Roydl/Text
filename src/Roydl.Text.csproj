@@ -10,7 +10,7 @@
     <Company>Roy Schroedel</Company>
     <Authors>Roy Schroedel</Authors>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <Description>Provides functions for encoding and decoding base 2, 8, 10, 16, 32, 64, 85 and 91.</Description>
+    <Description>Provides functions for encoding and decoding base 2, 8, 10, 16, 32, 64, 85 and 91 and more.</Description>
     <PackageProjectUrl>https://github.com/Roydl/Text</PackageProjectUrl>
     <PackageIcon>LOGO.png</PackageIcon>
     <RepositoryUrl>git://github.com/Roydl/Text</RepositoryUrl>
@@ -18,10 +18,14 @@
     <RepositoryType></RepositoryType>
     <SignAssembly>false</SignAssembly>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageId>Roydl.Text</PackageId>
     <Product>Roydl.Text</Product>
     <AppDesignerFolder>Resources</AppDesignerFolder>
+    <PackageReleaseNotes>- Added `TextSeparator` class which contains constant whitespace characters
+- Added `TextVerify` class, which can be used to determine categories of characters
+- Added `TextConvert` class which provides Rot13 and line separator conversion
+- Improved performance when encoding and decoding large data</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
