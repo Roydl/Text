@@ -7,15 +7,10 @@
     using System.Security.Cryptography;
     using Internal;
 
-    /// <summary>
-    ///     Provides functionality for encoding data into the Base-64 text
-    ///     representations and back.
-    /// </summary>
+    /// <summary>Provides functionality for encoding data into the Base-64 text representations and back.</summary>
     public sealed class Base64 : BinaryToTextEncoding
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base64"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Base64"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base64() { }
 

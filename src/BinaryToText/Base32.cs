@@ -8,18 +8,12 @@
     using Internal;
     using Resources;
 
-    /// <summary>
-    ///     Provides functionality for encoding data into the Base-32 text
-    ///     representations and back.
-    /// </summary>
+    /// <summary>Provides functionality for encoding data into the Base-32 text representations and back.</summary>
     public class Base32 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
-        /// <summary>
-        ///     Standard 32-character set:
-        ///     <para>
-        ///         <code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code>
-        ///     </para>
+        /// <summary>Standard 32-character set:
+        ///     <para><code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code></para>
         /// </summary>
         /// ReSharper restore CommentTypo
         protected static readonly byte[] DefCharacterTable32 =
@@ -33,9 +27,7 @@
         /// <inheritdoc cref="DefCharacterTable32"/>
         protected virtual ReadOnlySpan<byte> CharacterTable32 => DefCharacterTable32;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base32"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Base32"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base32() { }
 

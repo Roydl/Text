@@ -7,26 +7,18 @@
     using Internal;
     using Resources;
 
-    /// <summary>
-    ///     Provides functionality for encoding data into the Base-91 (formerly written
-    ///     basE91) text representation and back.
-    /// </summary>
-    /// <remarks>
-    ///     See more: <seealso href="http://base91.sourceforge.net/"/>.
-    /// </remarks>
+    /// <summary>Provides functionality for encoding data into the Base-91 (formerly written basE91) text representation and back.</summary>
+    /// <remarks>See more: <seealso href="http://base91.sourceforge.net/"/>.</remarks>
     public class Base91 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
-        /// <summary>
-        ///     Standard 91-character set:
-        ///     <para>
-        ///         <code>
+        /// <summary>Standard 91-character set:
+        ///     <para><code>
         ///             ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>
         ///             abcdefghijklmnopqrstuvwxyz<br/>
         ///             0123456789!#$%&amp;()*+,-.:;&lt;=<br/>
         ///             &gt;?@[]^_`{|}~&quot;<br/>
-        ///         </code>
-        ///     </para>
+        ///         </code></para>
         /// </summary>
         /// ReSharper restore CommentTypo
         protected static readonly byte[] DefCharacterTable91 =
@@ -47,9 +39,7 @@
         /// <inheritdoc cref="DefCharacterTable91"/>
         protected virtual ReadOnlySpan<byte> CharacterTable91 => DefCharacterTable91;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base91"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Base91"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base91() { }
 

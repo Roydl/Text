@@ -7,10 +7,7 @@
     using Internal;
     using Resources;
 
-    /// <summary>
-    ///     Provides functionality for encoding data into the Base-85 (also called
-    ///     Ascii85) text representation and back.
-    /// </summary>
+    /// <summary>Provides functionality for encoding data into the Base-85 (also called Ascii85) text representation and back.</summary>
     public sealed class Base85 : BinaryToTextEncoding
     {
         private static readonly uint[] DefPow85 =
@@ -24,9 +21,7 @@
 
         private static ReadOnlySpan<uint> Pow85 => DefPow85;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base85"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Base85"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base85() { }
 

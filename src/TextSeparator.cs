@@ -2,9 +2,7 @@
 {
     using System;
 
-    /// <summary>
-    ///     Specifies enumerated constants that are used to determine line separators.
-    /// </summary>
+    /// <summary>Specifies enumerated constants that are used to determine line separators.</summary>
     public enum TextNewLine
     {
         /// <inheritdoc cref="TextSeparator.BoundaryNeutral"/>
@@ -35,9 +33,7 @@
         WindowsDefault = TextWhiteSpace.WindowsDefault
     }
 
-    /// <summary>
-    ///     Specifies enumerated constants that are used to determine whitespaces.
-    /// </summary>
+    /// <summary>Specifies enumerated constants that are used to determine whitespaces.</summary>
     public enum TextWhiteSpace
     {
         /// <inheritdoc cref="TextSeparator.CommonNumberSeparator"/>
@@ -77,102 +73,76 @@
         WindowsDefault
     }
 
-    /// <summary>
-    ///     Provides constant <see cref="string"/> values of separator characters.
-    /// </summary>
+    /// <summary>Provides constant <see cref="string"/> values of separator characters.</summary>
     public static class TextSeparator
     {
-        /// <summary>
-        ///     Boundary Neutral [BN].
-        /// </summary>
+        /// <summary>Boundary Neutral [BN].</summary>
         public const string BoundaryNeutral = "\u200B";
 
         /// <inheritdoc cref="BoundaryNeutral"/>
         public const char BoundaryNeutralChar = '\u200B';
 
-        /// <summary>
-        ///     Carriage Return [CR].
-        /// </summary>
+        /// <summary>Carriage Return [CR].</summary>
         public const string CarriageReturn = "\r";
 
         /// <inheritdoc cref="CarriageReturn"/>
         public const char CarriageReturnChar = '\r';
 
-        /// <summary>
-        ///     Common Number Separator [CS].
-        /// </summary>
+        /// <summary>Common Number Separator [CS].</summary>
         public const string CommonNumberSeparator = "\u00a0";
 
         /// <inheritdoc cref="CommonNumberSeparator"/>
         public const char CommonNumberSeparatorChar = '\u00a0';
 
-        /// <summary>
-        ///     Form Feed [FF].
-        /// </summary>
+        /// <summary>Form Feed [FF].</summary>
         public const string FormFeed = "\f";
 
         /// <inheritdoc cref="FormFeed"/>
         public const char FormFeedChar = '\f';
 
-        /// <summary>
-        ///     Horizontal Tab [TAB].
-        /// </summary>
+        /// <summary>Horizontal Tab [TAB].</summary>
         public const string HorizontalTab = "\t";
 
         /// <inheritdoc cref="HorizontalTab"/>
         public const char HorizontalTabChar = '\t';
 
-        /// <summary>
-        ///     Line Feed [LF].
-        /// </summary>
+        /// <summary>Line Feed [LF].</summary>
         public const string LineFeed = "\n";
 
         /// <inheritdoc cref="LineFeed"/>
         public const char LineFeedChar = '\n';
 
-        /// <summary>
-        ///     Line Separator.
-        /// </summary>
+        /// <summary>Line Separator.</summary>
         public const string LineSeparator = "\u2028";
 
         /// <inheritdoc cref="LineSeparator"/>
         public const char LineSeparatorChar = '\u2028';
 
-        /// <summary>
-        ///     Next Line [NEL].
-        /// </summary>
+        /// <summary>Next Line [NEL].</summary>
         public const string NextLine = "\u0085";
 
         /// <inheritdoc cref="NextLine"/>
         public const char NextLineChar = '\u0085';
 
-        /// <summary>
-        ///     Paragraph Separator [B].
-        /// </summary>
+        /// <summary>Paragraph Separator [B].</summary>
         public const string ParagraphSeparator = "\u2029";
 
         /// <inheritdoc cref="ParagraphSeparator"/>
         public const char ParagraphSeparatorChar = '\u2029';
 
-        /// <summary>
-        ///     Space.
-        /// </summary>
+        /// <summary>Space.</summary>
         public const string Space = " ";
 
         /// <inheritdoc cref="Space"/>
         public const char SpaceChar = ' ';
 
-        /// <summary>
-        ///     Vertical Tab [VT].
-        /// </summary>
+        /// <summary>Vertical Tab [VT].</summary>
         public const string VerticalTab = "\v";
 
         /// <inheritdoc cref="VerticalTab"/>
         public const char VerticalTabChar = '\v';
 
-        /// <summary>
-        ///     Carriage Return [CR] &amp; Line Feed [LF].
-        /// </summary>
+        /// <summary>Carriage Return [CR] &amp; Line Feed [LF].</summary>
         public const string WindowsDefault = "\r\n";
 
         private static readonly string[] AllNewLineStrs =
@@ -229,35 +199,21 @@
             ParagraphSeparatorChar
         };
 
-        /// <summary>
-        ///     Returns a sequence of all line separator strings.
-        /// </summary>
+        /// <summary>Returns a sequence of all line separator strings.</summary>
         public static ReadOnlySpan<string> AllNewLineStrings => AllNewLineStrs;
 
-        /// <summary>
-        ///     Returns a sequence of all line separator characters.
-        /// </summary>
+        /// <summary>Returns a sequence of all line separator characters.</summary>
         public static ReadOnlySpan<char> AllNewLineChars => AllNewLineChrs;
 
-        /// <summary>
-        ///     Returns a sequence of all whitespace strings.
-        /// </summary>
+        /// <summary>Returns a sequence of all whitespace strings.</summary>
         public static ReadOnlySpan<string> AllWhiteSpaceStrings => AllWhiteSpaceStrs;
 
-        /// <summary>
-        ///     Returns a sequence of all whitespace characters.
-        /// </summary>
+        /// <summary>Returns a sequence of all whitespace characters.</summary>
         public static ReadOnlySpan<char> AllWhiteSpaceChars => AllWhiteSpaceChrs;
 
-        /// <summary>
-        ///     Retrieves the characters of the specified separator.
-        /// </summary>
-        /// <param name="separator">
-        ///     The value that determines the separator.
-        /// </param>
-        /// <returns>
-        ///     A string that represents a line separator character.
-        /// </returns>
+        /// <summary>Retrieves the characters of the specified separator.</summary>
+        /// <param name="separator">The value that determines the separator.</param>
+        /// <returns>A string that represents a line separator character.</returns>
         public static string GetSeparatorStr(TextNewLine separator) =>
             separator switch
             {
@@ -273,9 +229,7 @@
                 _ => throw new ArgumentOutOfRangeException(nameof(separator))
             };
 
-        /// <returns>
-        ///     A string that represents a whitespace character.
-        /// </returns>
+        /// <returns>A string that represents a whitespace character.</returns>
         /// <inheritdoc cref="GetSeparatorStr(TextNewLine)"/>
         public static string GetSeparatorStr(TextWhiteSpace separator) =>
             separator switch
@@ -286,19 +240,10 @@
                 _ => GetSeparatorStr((TextNewLine)separator)
             };
 
-        /// <summary>
-        ///     Retrieves the character of the specified separator.
-        /// </summary>
-        /// <param name="separator">
-        ///     The value that determines the separator.
-        /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     separator is <see cref="TextNewLine.WindowsDefault"/>, which cannot be a
-        ///     single character.
-        /// </exception>
-        /// <returns>
-        ///     A character that represents a line separator character.
-        /// </returns>
+        /// <summary>Retrieves the character of the specified separator.</summary>
+        /// <param name="separator">The value that determines the separator.</param>
+        /// <exception cref="NotSupportedException">separator is <see cref="TextNewLine.WindowsDefault"/>, which cannot be a single character.</exception>
+        /// <returns>A character that represents a line separator character.</returns>
         public static char GetSeparatorChar(TextNewLine separator) =>
             separator switch
             {
@@ -314,13 +259,8 @@
                 _ => throw new ArgumentOutOfRangeException(nameof(separator))
             };
 
-        /// <exception cref="NotSupportedException">
-        ///     separator is <see cref="TextWhiteSpace.WindowsDefault"/>, which cannot be a
-        ///     single character.
-        /// </exception>
-        /// <returns>
-        ///     A character that represents a whitespace character.
-        /// </returns>
+        /// <exception cref="NotSupportedException">separator is <see cref="TextWhiteSpace.WindowsDefault"/>, which cannot be a single character.</exception>
+        /// <returns>A character that represents a whitespace character.</returns>
         /// <inheritdoc cref="GetSeparatorChar(TextNewLine)"/>
         public static char GetSeparatorChar(TextWhiteSpace separator) =>
             separator switch
@@ -332,21 +272,13 @@
                 _ => GetSeparatorChar((TextNewLine)separator)
             };
 
-        /// <summary>
-        ///     Retrieves the characters of the specified separator.
-        /// </summary>
-        /// <param name="separator">
-        ///     The value that determines the separator.
-        /// </param>
-        /// <returns>
-        ///     A sequence of characters that represent a line separator character.
-        /// </returns>
+        /// <summary>Retrieves the characters of the specified separator.</summary>
+        /// <param name="separator">The value that determines the separator.</param>
+        /// <returns>A sequence of characters that represent a line separator character.</returns>
         public static ReadOnlySpan<char> GetSeparator(TextNewLine separator) =>
             GetSeparatorStr(separator);
 
-        /// <returns>
-        ///     A sequence of characters that represent a whitespace character.
-        /// </returns>
+        /// <returns>A sequence of characters that represent a whitespace character.</returns>
         /// <inheritdoc cref="GetSeparator(TextNewLine)"/>
         public static ReadOnlySpan<char> GetSeparator(TextWhiteSpace separator) =>
             GetSeparatorStr(separator);

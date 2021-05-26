@@ -8,15 +8,10 @@
     using Internal;
     using Resources;
 
-    /// <summary>
-    ///     Provides functionality for encoding data into Base-10 (decimal) text
-    ///     representations and back.
-    /// </summary>
+    /// <summary>Provides functionality for encoding data into Base-10 (decimal) text representations and back.</summary>
     public sealed class Base10 : BinaryToTextEncoding
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Base10"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Base10"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base10() { }
 
