@@ -1,8 +1,10 @@
 ﻿namespace Roydl.Text.Test
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using NUnit.Framework;
 
     public enum TestVarsType
     {
@@ -17,13 +19,16 @@
 
     public static class TestVars
     {
-        public const string PlatformInclude = "Win32NT,Linux";
+        public const string PlatformCross = "Win32NT,Linux";
         public const string QuoteStr = "We know what we are, but know not what we may be.";
         public const string TestStr = "Test";
         public static readonly byte[] TestBytes = { 0x54, 0x65, 0x73, 0x74 };
-        private static readonly Random Randomizer = new();
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
+
+        public static Random Randomizer => new();
+
+        public static Stopwatch StopWatch => new();
 
         public static byte[] GetRandomBytes(int size = 0)
         {
@@ -40,9 +45,7 @@
 
         public static string GetTempFilePath(string name)
         {
-            var dir = Environment.CurrentDirectory;
-            if (!Directory.Exists(dir)) // broken dir on some test platforms 
-                dir = AppDomain.CurrentDomain.BaseDirectory;
+            var dir = TestContext.CurrentContext.TestDirectory;
             return Path.Combine(dir, $"test-{name}-{Guid.NewGuid()}.tmp");
         }
     }

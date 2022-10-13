@@ -8,7 +8,7 @@
 
     [TestFixture]
     [Parallelizable]
-    [Platform(Include = TestVars.PlatformInclude)]
+    [Platform(Include = TestVars.PlatformCross)]
     public class Base91Tests
     {
         private const BinToTextEncoding Algorithm = BinToTextEncoding.Base91;
