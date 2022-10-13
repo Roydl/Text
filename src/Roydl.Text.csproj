@@ -18,14 +18,11 @@
     <RepositoryType></RepositoryType>
     <SignAssembly>false</SignAssembly>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageId>Roydl.Text</PackageId>
     <Product>Roydl.Text</Product>
     <AppDesignerFolder>Resources</AppDesignerFolder>
-    <PackageReleaseNotes>- Added `TextSeparator` class which contains constant whitespace characters
-- Added `TextVerify` class, which can be used to determine categories of characters
-- Added `TextConvert` class which provides Rot13 and line separator conversion
-- Improved performance when encoding and decoding large data</PackageReleaseNotes>
+    <PackageReleaseNotes>- Update to .NET 6.0 as 5.0 is reaching EOL</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
