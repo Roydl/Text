@@ -46,7 +46,7 @@ string original = value.DecodeString(BinToTextEncoding.Base85); // if `value` to
 
 // The `value` of type `string` can also be a file path, which is not
 // recommended for large files, in this case you should create a
-// `Base85` instance and use `FileStream` to read and write. 
+// `Base85` instance and use `FileStream` to read and write.
 string base85text = value.EncodeFile(BinToTextEncoding.Base85);
 byte[] original = value.DecodeFile(BinToTextEncoding.Base85);
 ```
