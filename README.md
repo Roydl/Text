@@ -1,10 +1,10 @@
 <p align="center">
-<a href="https://dotnet.microsoft.com/download/dotnet/5.0" rel="nofollow"><img src="https://img.shields.io/badge/core-v3.1%20or%20higher-lightgrey?style=for-the-badge&logo=dot-net&logoColor=white" title=".NET Core v3.1 LTS or higher" alt=".NET Core"></a>
-<a href="https://github.com/Roydl/Text/actions"><img src="https://img.shields.io/badge/cross%E2%80%93platform-%e2%9c%94-blue?style=for-the-badge&logo=linux&logoColor=silver" title="Automatically tested with Windows 10 &amp; Ubuntu 20.04 LTS" alt="Cross-platform"></a>
+<a href="https://dotnet.microsoft.com/en-us/download/dotnet" rel="nofollow"><img src="https://img.shields.io/badge/Core%20v3.1%20LTS-or%20higher-lightgrey?style=for-the-badge&logo=dotnet&logoColor=white" title=".NET3.1 LTS or higher" alt=".NET Core"></a>
+<a href="https://github.com/Roydl/Text/actions"><img src="https://img.shields.io/badge/cross%E2%80%93platform-%e2%9c%94-blue?style=for-the-badge&logo=linux&logoColor=silver" title="Automatically tested with Windows 11 &amp; Ubuntu 22.04 LTS" alt="Cross-platform"></a>
 <a href="https://github.com/Roydl/Text/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/Roydl/Text?style=for-the-badge" title="Read the license terms" alt="License"></a>
 </p>
 <p align="center">
-<a href="https://github.com/Roydl/Text/actions/workflows/dotnet.yml"><img src="https://img.shields.io/github/workflow/status/Roydl/Text/build%2Btest?style=for-the-badge&label=build%2Btest&logo=github&logoColor=silver" title="Check the last workflow results" alt="Build+Test"></a>
+<a href="https://github.com/Roydl/Text/actions/workflows/dotnet.yml"><img src="https://img.shields.io/github/actions/workflow/status/Roydl/Text/dotnet.yml?label=build%2Btest&logo=github&logoColor=silver&style=for-the-badge" title="Check the last workflow results" alt="Build+Test"></a>
 <a href="https://github.com/Roydl/Text/commits/master"><img src="https://img.shields.io/github/last-commit/Roydl/Text?style=for-the-badge&logo=github&logoColor=silver" title="Check the last commits" alt="Commits"></a>
 <a href="https://github.com/Roydl/Text/archive/refs/heads/master.zip"><img src="https://img.shields.io/badge/download-source-important?style=for-the-badge&logo=github&logoColor=silver" title="Start downloading the &apos;master.zip&apos; file" alt="Source"></a>
 </p>
