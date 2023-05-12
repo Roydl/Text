@@ -21,6 +21,13 @@ The idea was to create a comfortable way of binary-to-text encoding.
 
 You can easily create instances of any type to translate `Stream`, `byte[]` or `string` data. Extension methods are also provided for all types.
 
+## Install:
+
+```julia
+
+$ dotnet add package Roydl.Text
+
+```
 
 ## Binary-To-Text Encoding
 
@@ -34,7 +41,6 @@ You can easily create instances of any type to translate `Stream`, `byte[]` or `
 | Base-64 | Standard 64-character set: `A–Z`, `a–z`, `0–9`, `+` and `/`; `=` for padding |
 | Base-85 | Standard 85-character set: `!"#$%&'()*+,-./`, `0-9`, `:;<=>?@`, `A-Z`, <code>[]^_&#96;</code> and `a-u` |
 | Base-91 | Standard 91-character set: `A–Z`, `a–z`, `0–9`, and <code>!&#35;$%&amp;()*+,-.:;&lt;=&gt;?@[]^_&#96;{&#124;}~&quot;</code> |
-
 
 ### Usage:
 ```cs
