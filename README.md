@@ -1,6 +1,6 @@
 <p align="center">
-<a href="https://dotnet.microsoft.com/en-us/download/dotnet" rel="nofollow"><img src="https://img.shields.io/badge/Core%20v3.1%20LTS-or%20higher-lightgrey?style=for-the-badge&logo=dotnet&logoColor=white" title=".NET3.1 LTS or higher" alt=".NET Core"></a>
-<a href="https://github.com/Roydl/Text/actions"><img src="https://img.shields.io/badge/cross%E2%80%93platform-%e2%9c%94-blue?style=for-the-badge&logo=linux&logoColor=silver" title="Automatically tested with Windows 11 &amp; Ubuntu 22.04 LTS" alt="Cross-platform"></a>
+<a href="https://dotnet.microsoft.com/download/dotnet/10.0" rel="nofollow"><img src="https://img.shields.io/badge/Core%2010%20LTS-or%20higher-lightgrey?style=for-the-badge&logo=dotnet&logoColor=white" title=".NET10 LTS or higher" alt=".NET Core"></a>
+<a href="https://github.com/Roydl/Text/actions"><img src="https://img.shields.io/badge/cross%E2%80%93platform-%e2%9c%94-blue?style=for-the-badge&logo=linux&logoColor=silver" title="Automatically tested with Windows 11 &amp; Ubuntu 24.04 LTS" alt="Cross-platform"></a>
 <a href="https://github.com/Roydl/Text/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/Roydl/Text?style=for-the-badge" title="Read the license terms" alt="License"></a>
 </p>
 <p align="center">
@@ -67,5 +67,3 @@ byte[] original = value.DecodeFile(BinToTextEncoding.Base85);
 - [Open an Issue](https://github.com/Roydl/Text/issues/new) :coffee: to give me your feedback and tell me your ideas and wishes for the future :sunglasses:
 - [Open a Ticket](https://www.si13n7.com/?page=contact) :mailbox: if you don't have a GitHub account, you can contact me directly on my website :wink:
 - [Donate by PayPal](https://paypal.me/si13n7/) :money_with_wings: to buy me some cakes :cake:
-
-_Please note that I cannot fix bugs that are unknown to me. So do yourself and me the favor and get in touch with me._ :face_with_head_bandage:
