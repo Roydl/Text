@@ -18,10 +18,8 @@
         /// <inheritdoc/>
         public override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var bsi = Helper.GetBufferedStream(inputStream);
             var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
@@ -53,10 +51,8 @@
         /// <inheritdoc/>
         public override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var bsi = Helper.GetBufferedStream(inputStream);
             var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try

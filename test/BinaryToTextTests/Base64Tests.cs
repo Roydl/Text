@@ -102,18 +102,18 @@
         public void InstanceCtor()
         {
             var instance = new Base64();
-            Assert.IsInstanceOf(typeof(Base64), instance);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), instance);
+            Assert.IsInstanceOf<Base64>(instance);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(instance);
             Assert.AreNotSame(_instance, instance);
 
             var defaultInstance1 = Algorithm.GetDefaultInstance();
-            Assert.IsInstanceOf(typeof(Base64), defaultInstance1);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), defaultInstance1);
+            Assert.IsInstanceOf<Base64>(defaultInstance1);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(defaultInstance1);
             Assert.AreNotSame(instance, defaultInstance1);
 
             var defaultInstance2 = Algorithm.GetDefaultInstance();
-            Assert.IsInstanceOf(typeof(Base64), defaultInstance2);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), defaultInstance2);
+            Assert.IsInstanceOf<Base64>(defaultInstance2);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(defaultInstance2);
             Assert.AreSame(defaultInstance1, defaultInstance2);
         }
 

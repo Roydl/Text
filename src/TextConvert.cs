@@ -16,8 +16,7 @@
         /// <returns>A string in which all ASCII letters are rotated by 13 characters.</returns>
         public static string Rot13(string text)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            ArgumentNullException.ThrowIfNull(text);
             return text.Any(TextVerify.IsAsciiLetter) ? new string(text.Select(Rot13).ToArray()) : text;
         }
 
@@ -52,10 +51,8 @@
         /// <exception cref="ObjectDisposedException">Methods were called after the inputStream or outputStream was closed.</exception>
         public static void FormatSeparators(StreamReader inputStream, StreamWriter outputStream, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             try
             {
                 var newLine = TextSeparator.GetSeparator(separator);
@@ -90,11 +87,11 @@
                     outputStream.Dispose();
                 }
             }
+            return;
 
             static bool LocalIsCrLf(Stream stream)
             {
-                if (stream == null)
-                    throw new ArgumentNullException(nameof(stream));
+                ArgumentNullException.ThrowIfNull(stream);
                 var bs = new BufferedStream(stream, Helper.GetBufferSize(stream));
                 var pos = bs.Position;
                 var crLf = 0;
@@ -123,10 +120,8 @@
         /// <inheritdoc cref="FormatSeparators(StreamReader, StreamWriter, TextNewLine, int, bool)"/>
         public static void FormatSeparators(Stream inputStream, Stream outputStream, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             try
             {
                 using var sr = new StreamReader(inputStream, null, true, -1, true);
@@ -156,10 +151,8 @@
         /// <exception cref="IOException">An I/O error occurred, such as the specified file cannot be found.</exception>
         public static bool FormatSeparators(string srcPath, string destPath, TextNewLine separator = TextNewLine.WindowsDefault, int maxInRow = -1, bool overwrite = true)
         {
-            if (srcPath == null)
-                throw new ArgumentNullException(nameof(srcPath));
-            if (destPath == null)
-                throw new ArgumentNullException(nameof(destPath));
+            ArgumentNullException.ThrowIfNull(srcPath);
+            ArgumentNullException.ThrowIfNull(destPath);
             if (!File.Exists(srcPath))
                 throw new FileNotFoundException(ExceptionMessages.FileNotFound, srcPath);
             var dir = Path.GetDirectoryName(destPath);

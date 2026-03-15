@@ -9,23 +9,23 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into the Base-32 text representations and back.</summary>
-    public class Base32 : BinaryToTextEncoding
+    public sealed class Base32 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
         /// <summary>Standard 32-character set:
         ///     <para><code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code></para>
         /// </summary>
         /// ReSharper restore CommentTypo
-        protected static readonly byte[] DefCharacterTable32 =
-        {
+        private static readonly byte[] DefCharacterTable32 =
+        [
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
             0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50,
             0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
             0x59, 0x5a, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37
-        };
+        ];
 
         /// <inheritdoc cref="DefCharacterTable32"/>
-        protected virtual ReadOnlySpan<byte> CharacterTable32 => DefCharacterTable32;
+        private ReadOnlySpan<byte> CharacterTable32 => DefCharacterTable32;
 
         /// <summary>Initializes a new instance of the <see cref="Base32"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
@@ -34,10 +34,8 @@
         /// <inheritdoc/>
         public sealed override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var bsi = Helper.GetBufferedStream(inputStream);
             var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
@@ -86,10 +84,8 @@
         /// <inheritdoc/>
         public sealed override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var size = Helper.GetBufferSize(inputStream);
             var bs = Helper.GetBufferedStream(outputStream, size);
             try

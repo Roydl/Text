@@ -146,7 +146,7 @@
         public const string WindowsDefault = "\r\n";
 
         private static readonly string[] AllNewLineStrs =
-        {
+        [
             LineFeed,
             VerticalTab,
             FormFeed,
@@ -155,10 +155,10 @@
             BoundaryNeutral,
             LineSeparator,
             ParagraphSeparator
-        };
+        ];
 
         private static readonly char[] AllNewLineChrs =
-        {
+        [
             LineFeedChar,
             VerticalTabChar,
             FormFeedChar,
@@ -167,10 +167,10 @@
             BoundaryNeutralChar,
             LineSeparatorChar,
             ParagraphSeparatorChar
-        };
+        ];
 
         private static readonly string[] AllWhiteSpaceStrs =
-        {
+        [
             LineFeed,
             HorizontalTab,
             VerticalTab,
@@ -182,10 +182,10 @@
             BoundaryNeutral,
             LineSeparator,
             ParagraphSeparator
-        };
+        ];
 
         private static readonly char[] AllWhiteSpaceChrs =
-        {
+        [
             LineFeedChar,
             HorizontalTabChar,
             VerticalTabChar,
@@ -197,7 +197,7 @@
             BoundaryNeutralChar,
             LineSeparatorChar,
             ParagraphSeparatorChar
-        };
+        ];
 
         /// <summary>Returns a sequence of all line separator strings.</summary>
         public static ReadOnlySpan<string> AllNewLineStrings => AllNewLineStrs;

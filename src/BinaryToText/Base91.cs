@@ -9,7 +9,7 @@
 
     /// <summary>Provides functionality for encoding data into the Base-91 (formerly written basE91) text representation and back.</summary>
     /// <remarks>See more: <seealso href="http://base91.sourceforge.net/"/>.</remarks>
-    public class Base91 : BinaryToTextEncoding
+    public sealed class Base91 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
         /// <summary>Standard 91-character set:
@@ -21,8 +21,8 @@
         ///         </code></para>
         /// </summary>
         /// ReSharper restore CommentTypo
-        protected static readonly byte[] DefCharacterTable91 =
-        {
+        private static readonly byte[] DefCharacterTable91 =
+        [
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
             0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52,
             0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x61,
@@ -34,22 +34,20 @@
             0x2d, 0x2e, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40,
             0x5b, 0x5d, 0x5e, 0x5f, 0x60, 0x7b, 0x7c, 0x7d, 0x7e,
             0x22
-        };
+        ];
 
         /// <inheritdoc cref="DefCharacterTable91"/>
-        protected virtual ReadOnlySpan<byte> CharacterTable91 => DefCharacterTable91;
+        private static ReadOnlySpan<byte> CharacterTable91 => DefCharacterTable91;
 
         /// <summary>Initializes a new instance of the <see cref="Base91"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public Base91() { }
 
         /// <inheritdoc/>
-        public sealed override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
+        public override void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var bsi = Helper.GetBufferedStream(inputStream);
             var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try
@@ -100,12 +98,10 @@
         }
 
         /// <inheritdoc/>
-        public sealed override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
+        public override void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false)
         {
-            if (inputStream == null)
-                throw new ArgumentNullException(nameof(inputStream));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            ArgumentNullException.ThrowIfNull(inputStream);
+            ArgumentNullException.ThrowIfNull(outputStream);
             var bsi = Helper.GetBufferedStream(inputStream);
             var bso = Helper.GetBufferedStream(outputStream, bsi.BufferSize);
             try

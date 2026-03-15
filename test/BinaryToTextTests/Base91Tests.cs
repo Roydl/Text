@@ -18,14 +18,14 @@
         private static readonly string TestFileDestPath = TestVars.GetTempFilePath(Algorithm.ToString());
 
         private static readonly TestCaseData[] TestData =
-        {
+        [
             new(TestVarsType.TestStream, ExpectedTestEncoded),
             new(TestVarsType.TestBytes, ExpectedTestEncoded),
             new(TestVarsType.TestString, ExpectedTestEncoded),
             new(TestVarsType.TestFile, ExpectedTestEncoded),
             new(TestVarsType.RangeString, ExpectedRangeEncoded),
             new(TestVarsType.RandomBytes, null)
-        };
+        ];
 
         private static Base91 _instance;
 
@@ -102,18 +102,18 @@
         public void InstanceCtor()
         {
             var instance = new Base91();
-            Assert.IsInstanceOf(typeof(Base91), instance);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), instance);
+            Assert.IsInstanceOf<Base91>(instance);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(instance);
             Assert.AreNotSame(_instance, instance);
 
             var defaultInstance1 = Algorithm.GetDefaultInstance();
-            Assert.IsInstanceOf(typeof(Base91), defaultInstance1);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), defaultInstance1);
+            Assert.IsInstanceOf<Base91>(defaultInstance1);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(defaultInstance1);
             Assert.AreNotSame(instance, defaultInstance1);
 
             var defaultInstance2 = Algorithm.GetDefaultInstance();
-            Assert.IsInstanceOf(typeof(Base91), defaultInstance2);
-            Assert.IsInstanceOf(typeof(BinaryToTextEncoding), defaultInstance2);
+            Assert.IsInstanceOf<Base91>(defaultInstance2);
+            Assert.IsInstanceOf<BinaryToTextEncoding>(defaultInstance2);
             Assert.AreSame(defaultInstance1, defaultInstance2);
         }
 

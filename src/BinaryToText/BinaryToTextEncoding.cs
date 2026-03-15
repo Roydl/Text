@@ -35,8 +35,7 @@
         /// <returns>A string that contains the result of encoding the specified sequence of bytes.</returns>
         public string EncodeBytes(byte[] bytes, int lineLength = 0)
         {
-            if (bytes == null)
-                throw new ArgumentNullException(nameof(bytes));
+            ArgumentNullException.ThrowIfNull(bytes);
             using var msi = new MemoryStream(bytes);
             using var mso = new MemoryStream();
             EncodeStream(msi, mso, lineLength);
@@ -50,8 +49,7 @@
         /// <returns>A string that contains the result of encoding the specified string.</returns>
         public string EncodeString(string text, int lineLength = 0)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
+            ArgumentNullException.ThrowIfNull(text);
             var ba = Encoding.UTF8.GetBytes(text);
             return EncodeBytes(ba, lineLength);
         }
@@ -68,10 +66,8 @@
         /// <returns><see langword="true"/> if the destination file exists; otherwise, <see langword="false"/>.</returns>
         public bool EncodeFile(string srcPath, string destPath, int lineLength = 0, bool overwrite = true)
         {
-            if (srcPath == null)
-                throw new ArgumentNullException(nameof(srcPath));
-            if (destPath == null)
-                throw new ArgumentNullException(nameof(destPath));
+            ArgumentNullException.ThrowIfNull(srcPath);
+            ArgumentNullException.ThrowIfNull(destPath);
             if (!File.Exists(srcPath))
                 throw new FileNotFoundException(ExceptionMessages.FileNotFound, srcPath);
             var dir = Path.GetDirectoryName(destPath);
@@ -92,8 +88,7 @@
         /// <returns>A string that contains the result of encoding the file in the specified path.</returns>
         public string EncodeFile(string path, int lineLength = 0)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
             if (!File.Exists(path))
                 throw new FileNotFoundException(ExceptionMessages.FileNotFound, path);
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -121,8 +116,7 @@
         /// <returns>A sequence of bytes that contains the results of decoding the specified string.</returns>
         public byte[] DecodeBytes(string code)
         {
-            if (code == null)
-                throw new ArgumentNullException(nameof(code));
+            ArgumentNullException.ThrowIfNull(code);
             var ba = Encoding.UTF8.GetBytes(code);
             using var msi = new MemoryStream(ba);
             using var mso = new MemoryStream();
@@ -138,9 +132,7 @@
         public string DecodeString(string code)
         {
             var ba = DecodeBytes(code);
-            if (ba == null)
-                throw new NullReferenceException();
-            return Encoding.UTF8.GetString(ba);
+            return ba == null ? throw new NullReferenceException() : Encoding.UTF8.GetString(ba);
         }
 
         /// <summary>Decodes the specified source file to the specified destination file.</summary>
@@ -155,10 +147,8 @@
         /// <returns><see langword="true"/> if the destination file exists; otherwise, <see langword="false"/>.</returns>
         public bool DecodeFile(string srcPath, string destPath, bool overwrite = true)
         {
-            if (srcPath == null)
-                throw new ArgumentNullException(nameof(srcPath));
-            if (destPath == null)
-                throw new ArgumentNullException(nameof(destPath));
+            ArgumentNullException.ThrowIfNull(srcPath);
+            ArgumentNullException.ThrowIfNull(destPath);
             if (!File.Exists(srcPath))
                 throw new FileNotFoundException(ExceptionMessages.FileNotFound, srcPath);
             var dir = Path.GetDirectoryName(destPath);
@@ -179,8 +169,7 @@
         /// <returns>A sequence of bytes that contains the results of decoding the file in specified string.</returns>
         public byte[] DecodeFile(string path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(path);
             if (!File.Exists(path))
                 throw new FileNotFoundException(ExceptionMessages.FileNotFound, path);
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -206,8 +195,7 @@
         /// <exception cref="ArgumentOutOfRangeException">count is less than 1, or greater than size of bytes.</exception>
         protected void WriteLine(Stream stream, Span<byte> bytes, int count, int lineLength, ref int linePos)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             if (count < 1 || count > bytes.Length)
                 throw new ArgumentOutOfRangeException(nameof(count), count, null);
             for (var i = 0; i < count; i++)
@@ -226,8 +214,7 @@
         /// <exception cref="ArgumentNullException">stream is null.</exception>
         protected void WriteLine(Stream stream, byte value, int lineLength, ref int linePos)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             stream.WriteByte(value);
             if (Separator.IsEmpty || lineLength < 1 || ++linePos < lineLength)
                 return;

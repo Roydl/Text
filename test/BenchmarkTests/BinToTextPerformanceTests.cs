@@ -19,7 +19,7 @@ namespace Roydl.Text.Test.BenchmarkTests
         private const int BenchmarkRepeats = 20;
 
         private static readonly TestCaseData[] BenchmarkTestData =
-        {
+        [
             new(BinToTextEncoding.Base02, 65536),
             new(BinToTextEncoding.Base08, 65536),
             new(BinToTextEncoding.Base10, 65536),
@@ -28,7 +28,7 @@ namespace Roydl.Text.Test.BenchmarkTests
             new(BinToTextEncoding.Base64, 65536),
             new(BinToTextEncoding.Base85, 65536),
             new(BinToTextEncoding.Base91, 65536)
-        };
+        ];
 
         private static readonly ConcurrentDictionary<string, ConcurrentBag<double>> BenchmarkResults = new(Environment.ProcessorCount, BenchmarkTestData.Length);
 
@@ -36,7 +36,7 @@ namespace Roydl.Text.Test.BenchmarkTests
         [SetCulture("en-US")]
         public void CreateResultFiles()
         {
-            if (!BenchmarkResults.Any())
+            if (BenchmarkResults.IsEmpty)
                 return;
             var dir = TestContext.CurrentContext.TestDirectory;
             Parallel.ForEach(BenchmarkResults, pair =>
@@ -99,7 +99,7 @@ namespace Roydl.Text.Test.BenchmarkTests
 
             var key = $"{algorithm}@{packetSize}";
             if (!BenchmarkResults.ContainsKey(key))
-                BenchmarkResults[key] = new ConcurrentBag<double>();
+                BenchmarkResults[key] = [];
             BenchmarkResults[key].Add(rate);
         }
 

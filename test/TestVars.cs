@@ -22,7 +22,7 @@
         public const string PlatformCross = "Win32NT,Linux";
         public const string QuoteStr = "We know what we are, but know not what we may be.";
         public const string TestStr = "Test";
-        public static readonly byte[] TestBytes = { 0x54, 0x65, 0x73, 0x74 };
+        public static readonly byte[] TestBytes = "Test"u8.ToArray();
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
 

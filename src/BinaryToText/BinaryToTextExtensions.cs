@@ -43,40 +43,39 @@
         public static string Encode(this byte[] bytes, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
             encoder.GetDefaultInstance().EncodeBytes(bytes);
 
-        /// <summary>Encodes this string with the specified encoder.</summary>
         /// <param name="text">The string to encode.</param>
-        /// <param name="encoder">The encoder to use.</param>
-        /// <inheritdoc cref="BinaryToTextEncoding.EncodeString(string, int)"/>
-        public static string Encode(this string text, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
-            encoder.GetDefaultInstance().EncodeString(text);
+        extension(string text)
+        {
+            /// <summary>Encodes this string with the specified encoder.</summary>
+            /// <param name="encoder">The encoder to use.</param>
+            /// <inheritdoc cref="BinaryToTextEncoding.EncodeString(string, int)"/>
+            public string Encode(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
+                encoder.GetDefaultInstance().EncodeString(text);
 
-        /// <summary>Encodes this file with the specified encoder.</summary>
-        /// <param name="path">The full path of the file to encode.</param>
-        /// <param name="encoder">The encoder to use.</param>
-        /// <inheritdoc cref="BinaryToTextEncoding.EncodeFile(string, int)"/>
-        public static string EncodeFile(this string path, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
-            encoder.GetDefaultInstance().EncodeFile(path);
+            /// <summary>Encodes this file with the specified encoder.</summary>
+            /// <param name="encoder">The encoder to use.</param>
+            /// <inheritdoc cref="BinaryToTextEncoding.EncodeFile(string, int)"/>
+            public string EncodeFile(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
+                encoder.GetDefaultInstance().EncodeFile(text);
 
-        /// <summary>Decodes this string into a sequence of bytes with the specified encoder.</summary>
-        /// <param name="code">The string to decode.</param>
-        /// <param name="encoder">The encoder to use.</param>
-        /// <inheritdoc cref="BinaryToTextEncoding.DecodeBytes(string)"/>
-        public static byte[] Decode(this string code, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
-            encoder.GetDefaultInstance().DecodeBytes(code);
+            /// <summary>Decodes this string into a sequence of bytes with the specified encoder.</summary>
+            /// <param name="encoder">The encoder to use.</param>
+            /// <inheritdoc cref="BinaryToTextEncoding.DecodeBytes(string)"/>
+            public byte[] Decode(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
+                encoder.GetDefaultInstance().DecodeBytes(text);
 
-        /// <summary>Decodes this string into a sequence of bytes with the specified encoder.</summary>
-        /// <param name="code">The string to decode.</param>
-        /// <param name="encoder">The encoder to use.</param>
-        /// <inheritdoc cref="BinaryToTextEncoding.DecodeString(string)"/>
-        public static string DecodeString(this string code, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
-            encoder.GetDefaultInstance().DecodeString(code);
+            /// <summary>Decodes this string into a sequence of bytes with the specified encoder.</summary>
+            /// <param name="encoder">The encoder to use.</param>
+            /// <inheritdoc cref="BinaryToTextEncoding.DecodeString(string)"/>
+            public string DecodeString(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
+                encoder.GetDefaultInstance().DecodeString(text);
 
-        /// <summary>Decodes this file into a sequence of bytes with the specified encoder.</summary>
-        /// <param name="path">The full path of the file to decode.</param>
-        /// <param name="encoder">The encoder to use.</param>
-        /// <inheritdoc cref="BinaryToTextEncoding.DecodeFile(string)"/>
-        public static byte[] DecodeFile(this string path, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
-            encoder.GetDefaultInstance().DecodeFile(path);
+            /// <summary>Decodes this file into a sequence of bytes with the specified encoder.</summary>
+            /// <param name="encoder">The encoder to use.</param>
+            /// <inheritdoc cref="BinaryToTextEncoding.DecodeFile(string)"/>
+            public byte[] DecodeFile(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
+                encoder.GetDefaultInstance().DecodeFile(text);
+        }
 
         /// <summary>Retrieves a cached instance of the specified encoder.</summary>
         /// <param name="encoder"></param>

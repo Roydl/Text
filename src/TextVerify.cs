@@ -17,11 +17,11 @@
 
         /// <summary>Indicates whether the specified character is categorized as an ASCII letter.</summary>
         /// <param name="ch">The character to evaluate.</param>
-        /// <returns><see langword="true"/> if <paramref name="ch"/> is a ASCII letter; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="ch"/> is an ASCII letter; otherwise, <see langword="false"/>.</returns>
         public static bool IsAsciiLetter(char ch) =>
             IsAscii(ch) && char.IsLetter(ch);
 
-        /// <summary>Indicates whether the specified character is categorized as an Latin-1 (ISO-8859-1) letter.</summary>
+        /// <summary>Indicates whether the specified character is categorized as a Latin-1 (ISO-8859-1) letter.</summary>
         /// <param name="ch">The character to evaluate.</param>
         /// <returns><see langword="true"/> if <paramref name="ch"/> is a Latin-1 (ISO-8859-1) letter; otherwise, <see langword="false"/>.</returns>
         public static bool IsLatin1Letter(char ch) =>
