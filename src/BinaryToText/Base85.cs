@@ -68,6 +68,7 @@
                 {
                     var cur = 0;
                     Task pending = null;
+                    var linePos = 0;
                     var totalRead = ReadFully(bsi, inputBufs[cur]);
 
                     while (totalRead > 0)
@@ -201,12 +202,40 @@
                         });
 
                         pending?.Wait();
+                        
+                        var capturedLinePos = linePos;
                         pending = Task.Run(() =>
                         {
+                            var pos = capturedLinePos;
                             for (var j = 0; j < numChunks; j++)
-
-                                // ReSharper disable once AccessToDisposedClosure
-                                bso.Write(outputBufs[slot], j * (ChunkSize / 4) * 5, chunkSizes[slot][j]);
+                            {
+                                var start = j * (ChunkSize / 4) * 5;
+                                var count = chunkSizes[slot][j];
+                                if (lineLength < 1)
+                                {
+                                    // ReSharper disable once AccessToDisposedClosure
+                                    bso.Write(outputBufs[slot], start, count);
+                                    continue;
+                                }
+                                var end = start + count;
+                                var src = start;
+                                while (src < end)
+                                {
+                                    var chunk = Math.Min(lineLength - pos, end - src);
+                                    
+                                    // ReSharper disable once AccessToDisposedClosure
+                                    bso.Write(outputBufs[slot], src, chunk);
+                                    src += chunk;
+                                    pos += chunk;
+                                    if (pos < lineLength)
+                                        continue;
+                                    
+                                    // ReSharper disable once AccessToDisposedClosure
+                                    bso.Write(Separator.Span);
+                                    pos = 0;
+                                }
+                            }
+                            linePos = pos;
                         });
 
                         if (isLastBatch)
@@ -293,7 +322,9 @@
                             var b = inputBufs[slot][i];
                             if (IsSkippable(b))
                                 continue;
-                            if (b != 'z' && (b < (byte)'!' || b > (byte)'u'))
+                            if (Separator.Span.Contains(b))
+                                continue;
+                            if (b != 'z' && b is < (byte)'!' or > (byte)'u')
                                 throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)b));
                             compactBufs[slot][compactLen++] = b;
                         }
@@ -406,9 +437,8 @@
                         {
                             pending = Task.Run(() =>
                             {
+                                // ReSharper disable once AccessToDisposedClosure
                                 for (var i = 0; i < numChunks; i++)
-
-                                    // ReSharper disable once AccessToDisposedClosure
                                     bso.Write(outputBufs[slot], i * gpc * 4, chunkSizes[slot][i]);
                             });
                         }
