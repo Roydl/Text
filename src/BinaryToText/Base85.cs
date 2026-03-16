@@ -67,8 +67,8 @@
 
                 try
                 {
-                    var cur = 0;
                     Task pending = null;
+                    var cur = 0;
                     var linePos = 0;
                     var totalRead = ReadFully(bsi, inputBufs[cur]);
 
@@ -203,9 +203,9 @@
                         });
 
                         pending?.Wait();
-                        
+
                         var capturedLinePos = linePos;
-                        pending = Task.Run(() =>
+                        pending = Task.Run([SuppressMessage("ReSharper", "AccessToDisposedClosure")]() =>
                         {
                             var pos = capturedLinePos;
                             for (var j = 0; j < numChunks; j++)
@@ -214,7 +214,6 @@
                                 var count = chunkSizes[slot][j];
                                 if (lineLength < 1)
                                 {
-                                    // ReSharper disable once AccessToDisposedClosure
                                     bso.Write(outputBufs[slot], start, count);
                                     continue;
                                 }
@@ -223,15 +222,11 @@
                                 while (src < end)
                                 {
                                     var chunk = Math.Min(lineLength - pos, end - src);
-                                    
-                                    // ReSharper disable once AccessToDisposedClosure
                                     bso.Write(outputBufs[slot], src, chunk);
                                     src += chunk;
                                     pos += chunk;
                                     if (pos < lineLength)
                                         continue;
-                                    
-                                    // ReSharper disable once AccessToDisposedClosure
                                     bso.Write(Separator.Span);
                                     pos = 0;
                                 }
