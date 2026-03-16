@@ -33,7 +33,8 @@ namespace Roydl.Text.Test.BenchmarkTests
 
         private static readonly ConcurrentDictionary<string, ConcurrentBag<double>> BenchmarkResults = new(Environment.ProcessorCount, BenchmarkTestData.Length);
 
-        [OneTimeSetUp]
+        [Test]
+        [Order(0)]
         public void PrintHardwareInfo()
         {
             string cpu = null;
