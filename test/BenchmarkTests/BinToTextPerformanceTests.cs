@@ -1,4 +1,4 @@
-﻿#if NET5_0_OR_GREATER && RELEASE
+﻿#if RELEASE
 namespace Roydl.Text.Test.BenchmarkTests
 {
     using System;
