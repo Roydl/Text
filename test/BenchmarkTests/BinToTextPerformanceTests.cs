@@ -8,6 +8,7 @@ namespace Roydl.Text.Test.BenchmarkTests
     using System.Linq;
     using System.Threading.Tasks;
     using BinaryToText;
+    using Microsoft.Win32;
     using NUnit.Framework;
 
     [TestFixture]
@@ -31,6 +32,39 @@ namespace Roydl.Text.Test.BenchmarkTests
         ];
 
         private static readonly ConcurrentDictionary<string, ConcurrentBag<double>> BenchmarkResults = new(Environment.ProcessorCount, BenchmarkTestData.Length);
+
+        [OneTimeSetUp]
+        public void PrintHardwareInfo()
+        {
+            string cpu = null;
+            if (OperatingSystem.IsLinux())
+            {
+                foreach (var line in File.ReadLines("/proc/cpuinfo"))
+                {
+                    if (!line.StartsWith("model name", StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    cpu = line[(line.IndexOf(':') + 2)..].Trim();
+                    break;
+                }
+            }
+            else if (OperatingSystem.IsWindows())
+            {
+                var key = Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\CentralProcessor\0");
+                if (key?.GetValue("ProcessorNameString") is string name)
+                    cpu = name.Trim();
+            }
+            else
+                cpu = Environment.MachineName;
+
+            var cores = Environment.ProcessorCount;
+            var ram = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024 / 1024;
+            TestContext.WriteLine($"CPU:   {cpu}" +
+                                  Environment.NewLine +
+                                  $"Cores: {cores}" +
+                                  Environment.NewLine +
+                                  $"RAM:   {ram} GB" +
+                                  Environment.NewLine);
+        }
 
         [OneTimeTearDown]
         [SetCulture("en-US")]
