@@ -18,8 +18,6 @@
     public sealed class Base85 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1024 * 1024;
-
-        // Magic multiplier for floor(x / 85) via multiply-shift: floor((ulong)x * MagicOf85 >> 38)
         private const uint MagicOf85 = 3233857729u;
 
         private static readonly Vector256<byte> Bswap32Mask =
@@ -33,8 +31,6 @@
         private static readonly Vector256<uint> MagicVec = Vector256.Create(MagicOf85);
         private static readonly uint[] HiDecodeTable = BuildDecodeTable(614125u);
         private static readonly uint[] MidDecodeTable = BuildDecodeTable(85u);
-
-        // Hoisted as static readonly — avoids re-materialization inside Parallel.For lambdas
 
         /// <summary>Initializes a new instance of the <see cref="Base85"/> class.</summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
@@ -431,9 +427,8 @@
 
                         if (totalGroups > 0)
                         {
-                            pending = Task.Run(() =>
+                            pending = Task.Run([SuppressMessage("ReSharper", "AccessToDisposedClosure")]() =>
                             {
-                                // ReSharper disable once AccessToDisposedClosure
                                 for (var i = 0; i < numChunks; i++)
                                     bso.Write(outputBufs[slot], i * gpc * 4, chunkSizes[slot][i]);
                             });
