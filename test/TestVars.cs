@@ -31,6 +31,7 @@
         public const string QuoteStr = "We know what we are, but know not what we may be.";
         public const string TestStr = "Test";
         public static readonly byte[] TestBytes = "Test"u8.ToArray();
+        public static readonly int[] LineLengths = [1, 2, 5, 6, 7, 8, 9, 15, 20];
 
         public static string RangeStr { get; } = new(Enumerable.Range(byte.MinValue, byte.MaxValue).Select(i => (char)i).ToArray());
 

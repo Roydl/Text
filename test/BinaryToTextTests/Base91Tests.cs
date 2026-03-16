@@ -206,5 +206,22 @@
                 Assert.AreEqual(expectedEncoded, encoded);
             Assert.AreEqual(original, decoded);
         }
+
+        [Test]
+        [Category("LineLength")]
+        public void LineLengthEncodeDecode()
+        {
+            var original = TestVars.RangeStr;
+            foreach (var lineLength in TestVars.LineLengths)
+            {
+                var encoded = _instance.EncodeString((string)original, lineLength);
+                var encodedLines = encoded.Split(Environment.NewLine);
+                for (var i = 0; i < encodedLines.Length - 1; i++)
+                    Assert.AreEqual(lineLength, encodedLines[i].Length);
+                object decoded = _instance.DecodeString(encoded);
+                Assert.AreEqual(ExpectedRangeEncoded, string.Concat(encodedLines));
+                Assert.AreEqual(original, decoded);
+            }
+        }
     }
 }
