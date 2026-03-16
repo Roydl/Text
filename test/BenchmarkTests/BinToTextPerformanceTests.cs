@@ -63,37 +63,57 @@ namespace Roydl.Text.Test.BenchmarkTests
         private static void RunBenchmark(BinToTextEncoding algorithm, int packetSize, bool saveResults)
         {
             var inst = algorithm.GetDefaultInstance();
-            var data = new byte[packetSize];
-            TestVars.Randomizer.NextBytes(data);
-
-            const int cycles = 9 / 3;
             var sw = TestVars.StopWatch;
-            var rate = 0d;
-            for (var i = 0; i < cycles; i++)
+            var patterns = Enum.GetValues<TestBytePattern>();
+
+            const int cycles = 5;
+            const int secondsPerCycle = 3;
+
+            var patternRates = new double[patterns.Length];
+
+            for (var pi = 0; pi < patterns.Length; pi++)
             {
-                var total = 0L;
-                sw.Restart();
-                while (sw.Elapsed < TimeSpan.FromSeconds(cycles))
+                var data = TestVars.GetRandomBytes(packetSize, patterns[pi]);
+                var rates = new double[cycles];
+
+                // Pre-allocate output buffer sized for worst case (no 'z' groups)
+                using var mso = new MemoryStream(data.Length / 4 * 5 + 4);
+
+                // Warmup: one full cycle before measuring
+                using (var msi = new MemoryStream(data))
+                    inst.EncodeStream(msi, mso);
+
+                for (var i = 0; i < cycles; i++)
                 {
-                    inst.EncodeBytes(data);
-                    total += data.Length;
+                    var total = 0L;
+                    sw.Restart();
+                    while (sw.Elapsed < TimeSpan.FromSeconds(secondsPerCycle))
+                    {
+                        // Reuse streams — avoids measuring MemoryStream allocation overhead
+                        mso.Position = 0;
+                        using var msi = new MemoryStream(data, false);
+                        inst.EncodeStream(msi, mso);
+                        total += data.Length;
+                    }
+                    sw.Stop();
+                    rates[i] = total / sw.Elapsed.TotalSeconds / 1024 / 1024;
                 }
-                sw.Stop();
-                rate = Math.Max(total / sw.Elapsed.TotalSeconds / 1024 / 1024, rate);
+
+                // Sort and take median — discards warm-cache outliers on both ends
+                Array.Sort(rates);
+                patternRates[pi] = rates[cycles / 2];
             }
+
+            Array.Sort(patternRates);
+            var rate = patternRates[patternRates.Length / 2];
 
             if (!saveResults)
             {
-                TestContext.Write(@"  {0} Benchmark - Throughput: '{1:0.0} MiB/s'; ", algorithm, rate);
-                switch (packetSize)
-                {
-                    case > 1024:
-                        TestContext.Write(@"Packet Size: '{0:0} KiB';", packetSize / 1024);
-                        break;
-                    default:
-                        TestContext.Write(@"Packet Size: '{0:0} Bytes';", packetSize);
-                        break;
-                }
+                TestContext.WriteLine($@"  {algorithm} Benchmark - Throughput: '{rate:0.0} MiB/s'; Packet Size: '{(packetSize > 1024 ? $"{packetSize / 1024:0} KiB" : $"{packetSize:0} Bytes")}';");
+                TestContext.WriteLine(@"  Pattern Rates:");
+                for (var pi = 0; pi < patterns.Length; pi++)
+                    TestContext.WriteLine($@"  - {patterns[pi],-12} {patternRates[pi],8:0.0} MiB/s");
+                TestContext.WriteLine();
                 return;
             }
 
