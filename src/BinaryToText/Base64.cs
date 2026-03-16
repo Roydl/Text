@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using Internal;
     using Resources;
+    using NetBase64 = System.Buffers.Text.Base64;
 
     /// <summary>Provides functionality for encoding data into the Base-64 text representations and back.</summary>
     /// <remarks><b>Performance:</b> Highly optimized. Base64 encodes data in independent 3-byte groups with no serial dependency chain, making it amenable to SIMD vectorization and parallel processing. Encoding and decoding leverage .NET's hardware-accelerated <see cref="System.Buffers.Text.Base64"/> implementation (AVX2 on supported hardware) across multiple cores.</remarks>
@@ -74,12 +75,11 @@
                             // Each chunk slot: ChunkSize/3*4+4 bytes
                             var outStart = i * (ChunkSize / 3 * 4 + 4);
 
-                            System.Buffers.Text.Base64.EncodeToUtf8(
-                                                                    inputBufs[slot].AsSpan(inputStart, procLen),
-                                                                    outputBufs[slot].AsSpan(outStart),
-                                                                    out _,
-                                                                    out var written,
-                                                                    isFinal);
+                            NetBase64.EncodeToUtf8(inputBufs[slot].AsSpan(inputStart, procLen),
+                                                   outputBufs[slot].AsSpan(outStart),
+                                                   out _,
+                                                   out var written,
+                                                   isFinal);
 
                             chunkSizes[slot][i] = written;
                         });
@@ -247,12 +247,11 @@
                                 var endGroup = bounds[i + 1];
                                 var isFinal = i == numChunks - 1 && isLastBatch;
 
-                                System.Buffers.Text.Base64.DecodeFromUtf8(
-                                                                          cBuf.AsSpan(startGroup * 4, (endGroup - startGroup) * 4),
-                                                                          ob.AsSpan(startGroup * 3),
-                                                                          out _,
-                                                                          out var written,
-                                                                          isFinal);
+                                NetBase64.DecodeFromUtf8(cBuf.AsSpan(startGroup * 4, (endGroup - startGroup) * 4),
+                                                         ob.AsSpan(startGroup * 3),
+                                                         out _,
+                                                         out var written,
+                                                         isFinal);
 
                                 sizes[i] = written;
                             });
