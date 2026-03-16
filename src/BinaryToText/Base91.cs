@@ -8,7 +8,8 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into the Base-91 (formerly written basE91) text representation and back.</summary>
-    /// <remarks>See more: <seealso href="http://base91.sourceforge.net/"/>.</remarks>
+    /// <remarks><b>Performance:</b> Poor by design. Base91 is inherently sequential — each output word depends on an accumulated bit-state carried over from the previous byte, forming a serial dependency chain. This makes parallel encoding and decoding impossible without a full pre-scan pass that replicates the entire computation, which negates any potential gain from parallelism.</remarks>
+    /// <seealso href="http://base91.sourceforge.net/"/>
     public sealed class Base91 : BinaryToTextEncoding
     {
         /// ReSharper disable CommentTypo
@@ -135,7 +136,7 @@
                     db[1] = -1;
                 }
                 if (db[1] != -1)
-                    bso.WriteByte((byte)((db[2] | (db[1] << db[3])) & byte.MaxValue));
+                    bso.WriteByte((byte)((db[2] | db[1] << db[3]) & byte.MaxValue));
             }
             finally
             {
