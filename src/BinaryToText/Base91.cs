@@ -12,16 +12,9 @@
     /// <seealso href="http://base91.sourceforge.net/"/>
     public sealed class Base91 : BinaryToTextEncoding
     {
-        /// ReSharper disable CommentTypo
         /// <summary>Standard 91-character set:
-        ///     <para><code>
-        ///             ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>
-        ///             abcdefghijklmnopqrstuvwxyz<br/>
-        ///             0123456789!#$%&amp;()*+,-.:;&lt;=<br/>
-        ///             &gt;?@[]^_`{|}~&quot;<br/>
-        ///         </code></para>
+        ///     <para><code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&amp;()*+,-.:;&lt;=&gt;?@[]^_`{|}~&quot;</code></para>
         /// </summary>
-        /// ReSharper restore CommentTypo
         private static readonly byte[] DefCharacterTable91 =
         [
             0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,

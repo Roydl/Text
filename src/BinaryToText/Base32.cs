@@ -251,9 +251,9 @@
 
                 try
                 {
+                    Task pending = null;
                     var cur = 0;
                     var bytesRead = ReadFully(bsi, inputBufs[cur]);
-                    Task pending = null;
 
                     while (bytesRead > 0 || leftoverLen > 0)
                     {
