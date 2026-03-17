@@ -214,7 +214,7 @@
             var original = TestVars.RangeStr;
             foreach (var lineLength in TestVars.LineLengths)
             {
-                var encoded = _instance.EncodeString((string)original, lineLength);
+                var encoded = _instance.EncodeString(original, lineLength);
                 var encodedLines = encoded.Split(Environment.NewLine);
                 for (var i = 0; i < encodedLines.Length - 1; i++)
                     Assert.AreEqual(lineLength, encodedLines[i].Length);
