@@ -15,20 +15,20 @@
 
         internal static int GetBufferSize(Stream stream)
         {
+            const int mb1 = 0x100000;
+            const int kb512 = 0x80000;
+            const int kb256 = 0x40000;
             const int kb128 = 0x20000;
             const int kb64 = 0x10000;
-            const int kb32 = 0x8000;
             const int kb16 = 0x4000;
-            const int kb8 = 0x2000;
-            const int kb4 = 0x1000;
-            return (int)Math.Floor((stream?.Length ?? 0) / 1.5d) switch
+            return (stream?.Length ?? 0L) switch
             {
+                > mb1 => mb1,
+                > kb512 => kb512,
+                > kb256 => kb256,
                 > kb128 => kb128,
                 > kb64 => kb64,
-                > kb32 => kb32,
-                > kb16 => kb16,
-                > kb8 => kb8,
-                _ => kb4
+                _ => kb16
             };
         }
 
