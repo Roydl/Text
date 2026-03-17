@@ -21,7 +21,18 @@
             const int kb128 = 0x20000;
             const int kb64 = 0x10000;
             const int kb16 = 0x4000;
-            return (stream?.Length ?? 0L) switch
+
+            long length;
+            try
+            {
+                length = stream?.Length ?? 0;
+            }
+            catch
+            {
+                length = 0;
+            }
+
+            return length switch
             {
                 > mb1 => mb1,
                 > kb512 => kb512,
