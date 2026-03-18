@@ -17,49 +17,126 @@
 
 # Roydl.Text
 
-The idea was to create a comfortable way of binary-to-text encoding.
+Roydl.Text provides a simple, generic way to encode and decode binary data as text. Extension methods are available for `string` and `byte[]`, and a growing set of encodings is offered — all of which are performance-optimized and parallelized across available CPU cores, with AVX2 and AVX-512 SIMD acceleration where applicable.
 
-You can easily create instances of any type to translate `Stream`, `byte[]` or `string` data. Extension methods are also provided for all types.
+## Table of Contents
 
-## Install:
-
-```julia
-
-$ dotnet add package Roydl.Text
-
-```
-
-## Binary-To-Text Encoding
-
-| Type | Encoding |
-| ---- | ---- |
-| Base-2 | Binary character set: `0` and `1` |
-| Base-8 | Octal character set: `0-7` |
-| Base-10 | Decimal character set: `0-9` |
-| Base-16 | Hexadecimal character set: `0-9` and `a-f` |
-| Base-32 | Standard 32-character set: `A–Z` and `2–7`; `=` for padding |
-| Base-64 | Standard 64-character set: `A–Z`, `a–z`, `0–9`, `+` and `/`; `=` for padding |
-| Base-85 | Standard 85-character set: `!"#$%&'()*+,-./`, `0-9`, `:;<=>?@`, `A-Z`, <code>[]^_&#96;</code> and `a-u` |
-| Base-91 | Standard 91-character set: `A–Z`, `a–z`, `0–9`, and <code>!&#35;$%&amp;()*+,-.:;&lt;=&gt;?@[]^_&#96;{&#124;}~&quot;</code> |
-
-### Usage:
-```cs
-// The `value` must be type `string` or `byte[]`, if `BinToTextEncoding` is
-// not set, `Base64` is used by default.
-string base85text = value.Encode(BinToTextEncoding.Base85);
-byte[] original = value.Decode(BinToTextEncoding.Base85); // if `value` to decode is `byte[]`
-string original = value.DecodeString(BinToTextEncoding.Base85); // if `value` to decode is `string`
-
-// The `value` of type `string` can also be a file path, which is not
-// recommended for large files, in this case you should create a
-// `Base85` instance and use `FileStream` to read and write.
-string base85text = value.EncodeFile(BinToTextEncoding.Base85);
-byte[] original = value.DecodeFile(BinToTextEncoding.Base85);
-```
-
+- [Prerequisites](#prerequisites)
+- [Install](#install)
+- [Binary-To-Text Encodings](#binary-to-text-encodings)
+- [Encoding Performance](#encoding-performance)
+- [Usage](#usage)
+- [Would you like to help?](#would-you-like-to-help)
 
 ---
 
+## Prerequisites
+
+- [.NET 10 LTS](https://dotnet.microsoft.com/download/dotnet/10.0) or higher
+- Supported platforms: Windows, Linux, macOS
+- Hardware acceleration (optional): AVX2 or AVX-512 capable CPU
+
+---
+
+## Install
+```
+$ dotnet add package Roydl.Text
+```
+
+---
+
+## Binary-To-Text Encodings
+
+| Type | Character Set | Output Ratio | Hardware Support |
+| :---- | :---- | ----: | :----: |
+| Base-2 | `0` and `1` | 8× | AVX-512BW<br>AVX2 |
+| Base-8 | `0–7` | 3× | AVX-512BW<br>AVX2 |
+| Base-10 | `0–9` | 3× | AVX-512BW<br>AVX2 |
+| Base-16 | `0–9` and `a–f` | 2× | AVX-512BW<br>AVX2 |
+| Base-32 | `A–Z` and `2–7`; `=` for padding | 1.6× | AVX2 ¹ |
+| Base-64 | `A–Z`, `a–z`, `0–9`, `+` and `/`; `=` for padding | 1.33× | AVX2 ² |
+| Base-85 | ASCII printable range `!`–`u`; `z` shortcut for null groups | 1.25× | AVX2 |
+| Base-91 | `A–Z`, `a–z`, `0–9` and <code>!#$%&()*+,-.:;<=>?@[]^_`{|}~"</code> | ~1.23× | None ³ |
+
+> ¹ AVX2 is used for the alphabet lookup phase only. The non-power-of-two 5-bit group width prevents full SIMD vectorization of the bit-extraction phase.
+>
+> ² Delegates to .NET's built-in `System.Buffers.Text.Base64` which is internally AVX2-accelerated. Parallelization and double-buffered I/O are layered on top.
+>
+> ³ The algorithm maintains a serial bit-accumulator state across every byte, making it fundamentally incompatible with SIMD vectorization or parallel processing. Any optimization that would break this dependency chain would also break compatibility with existing encoded data.
+
+> For general binary-to-text encoding, Base-85 and Base-91 offer better compactness than Base-64 — Base-85 produces ~6% smaller output, and Base-91 ~9% smaller. Base-85 is the better practical choice of the two: it is over 7× faster than Base-91 while sacrificing only marginal compactness.
+
+---
+
+## Encoding Performance
+
+_Base-64 and Base-16 are the fastest encodings in this library. Base-91 is a known outlier — its serial design makes parallelization impossible without breaking the algorithm._
+
+| Encoding | Throughput |
+| :---- | ----: |
+| Base-2 | **2.2 GiB/s** |
+| Base-8 | **1.0 GiB/s** |
+| Base-10 | **1.2 GiB/s** |
+| Base-16 | **7.5 GiB/s** |
+| Base-32 | **1.3 GiB/s** |
+| Base-64 | **9.6 GiB/s** |
+| Base-85 | **2.8 GiB/s** |
+| Base-91 | **380 MiB/s** |
+
+<details>
+<summary>Benchmark methodology</summary>
+
+| Component | Details |
+| :--- | :--- |
+| CPU | AMD Ryzen 5 7600 (6C/12T, 5.1 GHz boost) |
+| RAM | 32 GB DDR5 |
+| OS | Manjaro Linux (Kernel 6.19.2-1) |
+| Runtime | .NET 10 |
+| Build | Release (`dotnet run -c Release`) |
+
+Each encoding is benchmarked using stream reuse to eliminate allocation overhead. Four input patterns are tested per encoding: random bytes, all-zeros, sequential, and mixed (25% zero groups). Each pattern runs five cycles of three seconds each. The reported throughput is the median across all patterns and cycles, which avoids cache-warmup bias and reflects sustained real-world performance. You can find the benchmark test [here](https://github.com/Roydl/Text/blob/master/test/BenchmarkTests/BinaryToTextPerformanceTests.cs).
+
+</details>
+
+---
+
+## Usage
+```cs
+// Encode — value can be string or byte[]
+// BinToTextEncoding defaults to Base64 if not specified
+string encoded = value.Encode(BinToTextEncoding.Base85);
+
+// Decode
+byte[] original = encoded.Decode(BinToTextEncoding.Base85);
+string original = encoded.DecodeString(BinToTextEncoding.Base85);
+
+// File encoding via extension methods
+// For large files, use the instance-based approach below instead
+string encoded = path.EncodeFile(BinToTextEncoding.Base85);
+byte[] original = path.DecodeFile(BinToTextEncoding.Base85);
+
+// Instance-based — recommended for large files or repeated use
+// GetDefaultInstance() returns a cached singleton per encoding type
+var encoder = BinToTextEncoding.Base85.GetDefaultInstance();
+
+// Stream-based — most efficient for large files
+using var input = new FileStream(srcPath, FileMode.Open, FileAccess.Read);
+using var output = new FileStream(destPath, FileMode.Create);
+encoder.EncodeStream(input, output);
+
+// Line length — inserts Environment.NewLine after every N encoded chars
+string encoded = value.Encode(BinToTextEncoding.Base64, lineLength: 76);
+
+// All public methods are available on every encoding instance
+string encoded  = encoder.EncodeBytes(bytes);
+string encoded  = encoder.EncodeString(text);
+string encoded  = encoder.EncodeFile(path);
+byte[] original = encoder.DecodeBytes(encoded);
+string original = encoder.DecodeString(encoded);
+byte[] original = encoder.DecodeFile(path);
+```
+
+---
 
 ## Would you like to help?
 
