@@ -94,7 +94,7 @@ _Base-64 and Base-16 are the fastest encodings in this library. Base-91 is a kno
 | Runtime | .NET 10 |
 | Build | Release (`dotnet run -c Release`) |
 
-Each encoding is benchmarked using stream reuse to eliminate allocation overhead. Four input patterns are tested per encoding: random bytes, all-zeros, sequential, and mixed (25% zero groups). Each pattern runs five cycles of three seconds each. The reported throughput is the median across all patterns and cycles, which avoids cache-warmup bias and reflects sustained real-world performance. You can find the benchmark test [here](https://github.com/Roydl/Text/blob/master/test/BenchmarkTests/BinaryToTextPerformanceTests.cs).
+Each encoding is benchmarked using stream reuse to eliminate allocation overhead. Four input patterns are tested per encoding: random bytes, all-zeros, sequential, and mixed (25% zero groups). Each pattern runs five cycles of three seconds each. The reported throughput is the median across all patterns and cycles, which avoids cache-warmup bias and reflects sustained real-world performance. You can find the benchmark test [here](https://github.com/Roydl/Text/blob/master/test/BenchmarkTests/BinToTextPerformanceTests.cs#L98).
 
 </details>
 
