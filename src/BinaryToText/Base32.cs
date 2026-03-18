@@ -80,7 +80,7 @@
                     Task pending = null;
                     var cur = 0;
                     var linePos = 0;
-                    var totalRead = ReadFully(bsi, inputBufs[cur]);
+                    var totalRead = ReadBuffer(bsi, inputBufs[cur]);
 
                     while (totalRead > 0)
                     {
@@ -191,7 +191,7 @@
                             break;
 
                         cur ^= 1;
-                        totalRead = ReadFully(bsi, inputBufs[cur]);
+                        totalRead = ReadBuffer(bsi, inputBufs[cur]);
                     }
 
                     pending?.Wait();
@@ -253,7 +253,7 @@
                 {
                     Task pending = null;
                     var cur = 0;
-                    var bytesRead = ReadFully(bsi, inputBufs[cur]);
+                    var bytesRead = ReadBuffer(bsi, inputBufs[cur]);
 
                     while (bytesRead > 0 || leftoverLen > 0)
                     {
@@ -373,7 +373,7 @@
                             break;
 
                         cur ^= 1;
-                        bytesRead = ReadFully(bsi, inputBufs[cur]);
+                        bytesRead = ReadBuffer(bsi, inputBufs[cur]);
                     }
 
                     pending?.Wait();

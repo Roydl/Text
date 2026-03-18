@@ -193,7 +193,7 @@
         /// <exception cref="NotSupportedException">stream is not readable.</exception>
         /// <exception cref="IOException">An I/O error occurred while reading from the stream.</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed.</exception>
-        protected static int ReadFully(Stream stream, byte[] buffer)
+        protected static int ReadBuffer(Stream stream, byte[] buffer)
         {
             ArgumentNullException.ThrowIfNull(stream);
             var totalRead = 0;
