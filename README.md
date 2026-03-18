@@ -49,10 +49,10 @@ $ dotnet add package Roydl.Text
 
 | Type | Character Set | Output Ratio | Hardware Support |
 | :---- | :---- | ----: | :----: |
-| Base-2 | `0` and `1` | 8× | AVX-512BW<br>AVX2 |
-| Base-8 | `0–7` | 3× | AVX-512BW<br>AVX2 |
-| Base-10 | `0–9` | 3× | AVX-512BW<br>AVX2 |
-| Base-16 | `0–9` and `a–f` | 2× | AVX-512BW<br>AVX2 |
+| Base-2 | `0` and `1` | 8× | AVX-512<br>AVX2 |
+| Base-8 | `0–7` | 3× | AVX-512<br>AVX2 |
+| Base-10 | `0–9` | 3× | AVX-512<br>AVX2 |
+| Base-16 | `0–9` and `a–f` | 2× | AVX-512<br>AVX2 |
 | Base-32 | `A–Z` and `2–7`; `=` for padding | 1.6× | AVX2 ¹ |
 | Base-64 | `A–Z`, `a–z`, `0–9`, `+` and `/`; `=` for padding | 1.33× | AVX2 ² |
 | Base-85 | ASCII printable range `!`–`u`; `z` shortcut for null groups | 1.25× | AVX2 |
