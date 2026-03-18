@@ -43,6 +43,30 @@
         public static string Encode(this byte[] bytes, BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
             encoder.GetDefaultInstance().EncodeBytes(bytes);
 
+        /// <summary>Retrieves a cached instance of the specified encoder.</summary>
+        /// <param name="encoder"></param>
+        /// <returns>A cached instance of the specified encoder.</returns>
+        public static BinaryToTextEncoding GetDefaultInstance(this BinToTextEncoding encoder)
+        {
+            var i = (int)encoder;
+            while (_cachedInstances == null)
+                Interlocked.CompareExchange(ref _cachedInstances, new BinaryToTextEncoding[Enum.GetValues(typeof(BinToTextEncoding)).Length], null);
+            while (_cachedInstances[i] == null)
+                Interlocked.CompareExchange(ref _cachedInstances[i], encoder switch
+                {
+                    BinToTextEncoding.Base02 => new Base02(),
+                    BinToTextEncoding.Base08 => new Base08(),
+                    BinToTextEncoding.Base10 => new Base10(),
+                    BinToTextEncoding.Base16 => new Base16(),
+                    BinToTextEncoding.Base32 => new Base32(),
+                    BinToTextEncoding.Base64 => new Base64(),
+                    BinToTextEncoding.Base85 => new Base85(),
+                    BinToTextEncoding.Base91 => new Base91(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(encoder), encoder, null)
+                }, null);
+            return _cachedInstances[i];
+        }
+
         /// <param name="text">The string to encode.</param>
         extension(string text)
         {
@@ -75,30 +99,6 @@
             /// <inheritdoc cref="BinaryToTextEncoding.DecodeFile(string)"/>
             public byte[] DecodeFile(BinToTextEncoding encoder = BinToTextEncoding.Base64) =>
                 encoder.GetDefaultInstance().DecodeFile(text);
-        }
-
-        /// <summary>Retrieves a cached instance of the specified encoder.</summary>
-        /// <param name="encoder"></param>
-        /// <returns>A cached instance of the specified encoder.</returns>
-        public static BinaryToTextEncoding GetDefaultInstance(this BinToTextEncoding encoder)
-        {
-            var i = (int)encoder;
-            while (_cachedInstances == null)
-                Interlocked.CompareExchange(ref _cachedInstances, new BinaryToTextEncoding[Enum.GetValues(typeof(BinToTextEncoding)).Length], null);
-            while (_cachedInstances[i] == null)
-                Interlocked.CompareExchange(ref _cachedInstances[i], encoder switch
-                {
-                    BinToTextEncoding.Base02 => new Base02(),
-                    BinToTextEncoding.Base08 => new Base08(),
-                    BinToTextEncoding.Base10 => new Base10(),
-                    BinToTextEncoding.Base16 => new Base16(),
-                    BinToTextEncoding.Base32 => new Base32(),
-                    BinToTextEncoding.Base64 => new Base64(),
-                    BinToTextEncoding.Base85 => new Base85(),
-                    BinToTextEncoding.Base91 => new Base91(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(encoder), encoder, null)
-                }, null);
-            return _cachedInstances[i];
         }
     }
 }
