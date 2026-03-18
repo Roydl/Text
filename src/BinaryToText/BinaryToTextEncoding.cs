@@ -9,7 +9,7 @@
     /// <summary>Represents the base class from which all implementations of binary-to-text encoding must derive.</summary>
     public abstract class BinaryToTextEncoding
     {
-        /// <summary>Gets <see cref="Environment.NewLine"/> as a sequence of bytes used as a line separator within the <see cref="WriteLine(Stream, Span{byte}, int, int, ref int)"/> and <see cref="WriteLine(Stream, byte, int, ref int)"/> methods.</summary>
+        /// <summary>Gets <see cref="Environment.NewLine"/> as a sequence of bytes used as a line separator when a line length is defined.</summary>
         protected virtual ReadOnlyMemory<byte> Separator { get; } = Encoding.UTF8.GetBytes(Environment.NewLine);
 
         /// <summary>Encodes the specified input stream into the specified output stream.</summary>
@@ -201,39 +201,6 @@
             while (totalRead < buffer.Length && (read = stream.Read(buffer, totalRead, buffer.Length - totalRead)) > 0)
                 totalRead += read;
             return totalRead;
-        }
-
-        /// <summary>Write the specified sequence of bytes into the stream and add a line separator depending on the specified line length.</summary>
-        /// <param name="stream">The stream in which to write the single byte.</param>
-        /// <param name="bytes">A sequence of bytes.</param>
-        /// <param name="count">The number of bytes to be written to the current stream.</param>
-        /// <param name="lineLength">The length of lines.</param>
-        /// <param name="linePos">The current position in the line.</param>
-        /// <exception cref="ArgumentNullException">stream is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">count is less than 1, or greater than size of bytes.</exception>
-        protected void WriteLine(Stream stream, Span<byte> bytes, int count, int lineLength, ref int linePos)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-            if (count < 1 || count > bytes.Length)
-                throw new ArgumentOutOfRangeException(nameof(count), count, null);
-            for (var i = 0; i < count; i++)
-                WriteLine(stream, bytes[i], lineLength, ref linePos);
-        }
-
-        /// <summary>Write the specified byte into the stream and add a line separator depending on the specified line length.</summary>
-        /// <param name="stream">The stream in which to write the single byte.</param>
-        /// <param name="value">The byte to write to the stream.</param>
-        /// <param name="lineLength">The length of lines.</param>
-        /// <param name="linePos">The position in the line.</param>
-        /// <exception cref="ArgumentNullException">stream is null.</exception>
-        protected void WriteLine(Stream stream, byte value, int lineLength, ref int linePos)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-            stream.WriteByte(value);
-            if (Separator.IsEmpty || lineLength < 1 || ++linePos < lineLength)
-                return;
-            linePos = 0;
-            stream.Write(Separator.Span);
         }
     }
 }

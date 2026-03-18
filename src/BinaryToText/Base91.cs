@@ -145,5 +145,15 @@
                 }
             }
         }
+
+        private void WriteLine(Stream stream, byte value, int lineLength, ref int linePos)
+        {
+            ArgumentNullException.ThrowIfNull(stream);
+            stream.WriteByte(value);
+            if (Separator.IsEmpty || lineLength < 1 || ++linePos < lineLength)
+                return;
+            linePos = 0;
+            stream.Write(Separator.Span);
+        }
     }
 }
