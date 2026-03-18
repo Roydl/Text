@@ -461,8 +461,7 @@
             for (var g = processed; g < groups; g++)
             {
                 var b = input + g * 5;
-                var v = (ulong)b[0] << 32 | (ulong)b[1] << 24 |
-                        (ulong)b[2] << 16 | (ulong)b[3] << 8 | b[4];
+                var v = (ulong)b[0] << 32 | (ulong)b[1] << 24 | (ulong)b[2] << 16 | (ulong)b[3] << 8 | b[4];
                 var o = output + g * 8;
                 o[0] = DefCharacterTable32[v >> 35 & 0x1f];
                 o[1] = DefCharacterTable32[v >> 30 & 0x1f];

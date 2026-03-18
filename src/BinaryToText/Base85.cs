@@ -21,10 +21,14 @@
         private const uint MagicOf85 = 3233857729u;
 
         private static readonly Vector256<byte> Bswap32Mask =
-            Vector256.Create((byte)3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12, 3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);
+            Vector256.Create((byte)
+                             3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12,
+                             3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);
 
         private static readonly Vector256<byte> TransposeMask =
-            Vector256.Create((byte)0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
+            Vector256.Create((byte)
+                             0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15,
+                             0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
 
         private static readonly Vector256<uint> Vec256Of33 = Vector256.Create(33u);
         private static readonly Vector256<uint> Vec256Of85 = Vector256.Create(85u);

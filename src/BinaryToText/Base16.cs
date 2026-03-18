@@ -370,31 +370,6 @@
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe static void EncodeAvx2(byte* input, byte* output, int count)
-        {
-            var lut = HexLut256;
-            var mask = MaskOf256;
-            var processed = 0;
-            while (processed + 32 <= count)
-            {
-                var raw = Avx.LoadVector256(input + processed);
-                var lo = Avx2.And(raw, mask);
-                var hi = Avx2.And(Avx2.ShiftRightLogical(raw.AsUInt16(), 4).AsByte(), mask);
-
-                var interleavedLo = Avx2.UnpackLow(hi, lo);
-                var interleavedHi = Avx2.UnpackHigh(hi, lo);
-
-                var hexLo = Avx2.Shuffle(lut, interleavedLo);
-                var hexHi = Avx2.Shuffle(lut, interleavedHi);
-
-                Avx.Store(output + processed * 2, Avx2.Permute2x128(hexLo, hexHi, 0x20));
-                Avx.Store(output + processed * 2 + 32, Avx2.Permute2x128(hexLo, hexHi, 0x31));
-
-                processed += 32;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe static void EncodeAvx512(byte* input, byte* output, int count)
         {
             var lut = HexLut512;
@@ -423,6 +398,31 @@
                 Avx.Store(output + processed * 2 + 96, Avx2.Permute2x128(hexLoHi, hexHiHi, 0x31));
 
                 processed += 64;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private unsafe static void EncodeAvx2(byte* input, byte* output, int count)
+        {
+            var lut = HexLut256;
+            var mask = MaskOf256;
+            var processed = 0;
+            while (processed + 32 <= count)
+            {
+                var raw = Avx.LoadVector256(input + processed);
+                var lo = Avx2.And(raw, mask);
+                var hi = Avx2.And(Avx2.ShiftRightLogical(raw.AsUInt16(), 4).AsByte(), mask);
+
+                var interleavedLo = Avx2.UnpackLow(hi, lo);
+                var interleavedHi = Avx2.UnpackHigh(hi, lo);
+
+                var hexLo = Avx2.Shuffle(lut, interleavedLo);
+                var hexHi = Avx2.Shuffle(lut, interleavedHi);
+
+                Avx.Store(output + processed * 2, Avx2.Permute2x128(hexLo, hexHi, 0x20));
+                Avx.Store(output + processed * 2 + 32, Avx2.Permute2x128(hexLo, hexHi, 0x31));
+
+                processed += 32;
             }
         }
 

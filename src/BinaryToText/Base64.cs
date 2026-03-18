@@ -14,10 +14,7 @@
     /// <remarks><b>Performance:</b> Highly optimized. Base64 encodes data in independent 3-byte groups with no serial dependency chain, making it amenable to SIMD vectorization and parallel processing. Encoding and decoding leverage .NET's hardware-accelerated <see cref="System.Buffers.Text.Base64"/> implementation (AVX2 on supported hardware) across multiple cores.</remarks>
     public sealed class Base64 : BinaryToTextEncoding
     {
-        // Must be a multiple of 3 so chunk boundaries always align to group boundaries
         private const int ChunkSize = 999 * 1024;
-
-        // Reverse lookup for decode validation: ASCII value → Base64 index, -1 if invalid
         private static readonly int[] ReverseTable = BuildReverseTable();
 
         /// <summary>Initializes a new instance of the <see cref="Base64"/> class.</summary>
@@ -72,7 +69,7 @@
                             // Non-final chunks must be a multiple of 3 — no padding emitted
                             var procLen = isFinal ? inputLen : inputLen / 3 * 3;
 
-                            // Each chunk slot: ChunkSize/3*4+4 bytes
+                            // Each chunk slot
                             var outStart = i * (ChunkSize / 3 * 4 + 4);
 
                             NetBase64.EncodeToUtf8(inputBufs[slot].AsSpan(inputStart, procLen),
