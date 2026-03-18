@@ -56,7 +56,7 @@ $ dotnet add package Roydl.Text
 | Base-32 | `A–Z` and `2–7`; `=` for padding | 1.6× | AVX2 ¹ |
 | Base-64 | `A–Z`, `a–z`, `0–9`, `+` and `/`; `=` for padding | 1.33× | AVX2 ² |
 | Base-85 | ASCII printable range `!`–`u`; `z` shortcut for null groups | 1.25× | AVX2 |
-| Base-91 | `A–Z`, `a–z`, `0–9` and <code>!#$%&()*+,-.:;<=>?@[]^_`{|}~"</code> | ~1.23× | None ³ |
+| Base-91 | `A–Z`, `a–z`, `0–9` and <code>!#$%&()*+,-.:;<=>?@[]^_`{&#124;}~"</code> | ~1.23× | None ³ |
 
 > ¹ AVX2 is used for the alphabet lookup phase only. The non-power-of-two 5-bit group width prevents full SIMD vectorization of the bit-extraction phase.
 >
