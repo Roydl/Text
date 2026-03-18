@@ -220,10 +220,6 @@
                 WriteLine(stream, bytes[i], lineLength, ref linePos);
         }
 
-        /// <inheritdoc cref="WriteLine(Stream, Span{byte}, int, int, ref int)"/>
-        protected void WriteLine(Stream stream, Span<byte> bytes, int lineLength, ref int linePos) =>
-            WriteLine(stream, bytes, bytes.Length, lineLength, ref linePos);
-
         /// <summary>Write the specified byte into the stream and add a line separator depending on the specified line length.</summary>
         /// <param name="stream">The stream in which to write the single byte.</param>
         /// <param name="value">The byte to write to the stream.</param>
