@@ -516,16 +516,6 @@
             }
         }
 
-        private static int ReadFully(Stream stream, byte[] buffer)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-            var totalRead = 0;
-            int read;
-            while (totalRead < buffer.Length && (read = stream.Read(buffer, totalRead, buffer.Length - totalRead)) > 0)
-                totalRead += read;
-            return totalRead;
-        }
-
         // Pow85 for the partial-block path only — not used in any hot path
         private static uint Pow85(int exp) => exp switch
         {

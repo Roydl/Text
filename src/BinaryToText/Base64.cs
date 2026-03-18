@@ -322,15 +322,5 @@
             table['/'] = 63;
             return table;
         }
-
-        private static int ReadFully(Stream stream, byte[] buffer)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-            var totalRead = 0;
-            int read;
-            while (totalRead < buffer.Length && (read = stream.Read(buffer, totalRead, buffer.Length - totalRead)) > 0)
-                totalRead += read;
-            return totalRead;
-        }
     }
 }

@@ -185,6 +185,24 @@
         protected static bool IsSkippable(int value, params int[] additional) =>
             value is '\0' or '\t' or '\n' or '\r' or ' ' || additional?.Any(i => value == i) == true;
 
+        /// <summary>Reads bytes from the specified stream into the buffer until the buffer is full or the stream is exhausted.</summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="buffer">The buffer to read into.</param>
+        /// <returns>The total number of bytes read. May be less than the buffer length if the stream was exhausted.</returns>
+        /// <exception cref="ArgumentNullException">stream is null.</exception>
+        /// <exception cref="NotSupportedException">stream is not readable.</exception>
+        /// <exception cref="IOException">An I/O error occurred while reading from the stream.</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed.</exception>
+        protected static int ReadFully(Stream stream, byte[] buffer)
+        {
+            ArgumentNullException.ThrowIfNull(stream);
+            var totalRead = 0;
+            int read;
+            while (totalRead < buffer.Length && (read = stream.Read(buffer, totalRead, buffer.Length - totalRead)) > 0)
+                totalRead += read;
+            return totalRead;
+        }
+
         /// <summary>Write the specified sequence of bytes into the stream and add a line separator depending on the specified line length.</summary>
         /// <param name="stream">The stream in which to write the single byte.</param>
         /// <param name="bytes">A sequence of bytes.</param>
