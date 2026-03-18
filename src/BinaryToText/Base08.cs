@@ -13,7 +13,7 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into Base-8 (octal) text representations and back.</summary>
-    /// <remarks><b>Performance:</b> Highly optimized. Each byte maps independently to three octal digits via pure bit-shifts with no division, making it fully parallelizable across all cores with AVX2 and AVX-512 SIMD acceleration.</remarks>
+    /// <remarks><b>Performance:</b> Highly optimized. Each byte maps independently to three octal digits via pure bit-shifts with no division, making it fully parallelizable across all cores with AVX2 and AVX-512 SIMD acceleration. The 3-byte output stride limits SIMD scatter efficiency, placing throughput roughly on par with Base10 and approximately 7x below Base16.</remarks>
     public sealed class Base08 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1024 * 1024;

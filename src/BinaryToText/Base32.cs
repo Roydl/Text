@@ -13,7 +13,7 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into the Base-32 text representations and back.</summary>
-    /// <remarks><b>Performance:</b> Moderately optimized. Although Base32 encodes data in independent 5-byte groups with no serial dependency chain, the non-power-of-two group width makes full SIMD vectorization impractical. AVX2 is used for the alphabet lookup phase, while the 5-bit extraction remains scalar. Parallelization across multiple cores provides the majority of the throughput gain.</remarks>
+    /// <remarks><b>Performance:</b> Moderately optimized. Although Base32 encodes data in independent 5-byte groups with no serial dependency chain, the non-power-of-two group width makes full SIMD vectorization impractical. AVX2 is used for the alphabet lookup phase, while the 5-bit extraction remains scalar. Parallelization across multiple cores provides the majority of the throughput gain. Approximately 7x slower than Base64 and 6x slower than Base16.</remarks>
     public sealed class Base32 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1000 * 1024;

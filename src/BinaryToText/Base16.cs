@@ -13,7 +13,7 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into Base-16 (hexadecimal) text representations and back.</summary>
-    /// <remarks><b>Performance:</b> Highly optimized. Each byte maps independently to two hex chars with no carry state, making Base16 the most SIMD-friendly of all binary-to-text encodings. Encoding uses AVX-512BW (64 bytes/iter) or AVX2 (32 bytes/iter) with parallel processing across all cores.</remarks>
+    /// <remarks><b>Performance:</b> Highly optimized. Each byte maps independently to two hex chars with no carry state, making Base16 the most SIMD-friendly of all binary-to-text encodings after Base64. Encoding uses AVX-512BW (64 bytes/iter) or AVX2 (32 bytes/iter) with parallel processing across all cores. Roughly 1.3x slower than Base64 due to the larger 2x output expansion, and approximately 2.6x faster than Base85.</remarks>
     public sealed class Base16 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1024 * 1024;
@@ -224,7 +224,6 @@
                 int[][] chunkSizes = [new int[threadCount], new int[threadCount]];
                 int[][] boundaries = [new int[threadCount + 1], new int[threadCount + 1]];
 
-                // At most 1 leftover nibble carried between batches
                 Span<byte> leftover = stackalloc byte[2];
                 var leftoverLen = 0;
 

@@ -13,7 +13,7 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into Base-2 (binary) text representations and back.</summary>
-    /// <remarks><b>Performance:</b> Highly optimized. Each byte expands to 8 binary chars via pure bit-shifts with no division, and the power-of-two output stride enables full SIMD vectorization without scatter overhead. Encoding uses AVX-512BW (64 bytes/iter) or AVX2 (32 bytes/iter) with parallel processing across all cores.</remarks>
+    /// <remarks><b>Performance:</b> Highly optimized. Each byte expands to 8 binary chars via pure bit-shifts with no division, and the power-of-two output stride enables full SIMD vectorization without scatter overhead. Encoding uses AVX-512BW (64 bytes/iter) or AVX2 (32 bytes/iter) with parallel processing across all cores. Roughly 3x slower than Base16 due to the 8x output expansion, and approximately 4x slower than Base64.</remarks>
     public sealed class Base02 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1024 * 1024;

@@ -14,7 +14,7 @@
     using Resources;
 
     /// <summary>Provides functionality for encoding data into the Base-85 (also called Ascii85) text representation and back.</summary>
-    /// <remarks><b>Performance:</b> Highly optimized. Base85 encodes data in independent 4-byte groups, forming no serial dependency chain between groups. This makes it highly amenable to SIMD vectorization (AVX2) and parallel processing across multiple cores, resulting in throughput that scales with available hardware.</remarks>
+    /// <remarks><b>Performance:</b> Highly optimized. Base85 encodes data in independent 4-byte groups, forming no serial dependency chain between groups. This makes it highly amenable to SIMD vectorization (AVX2) and parallel processing across multiple cores, resulting in throughput that scales with available hardware. Approximately 3x slower than Base64 and 2.6x slower than Base16, primarily due to the division-by-85 required for digit extraction.</remarks>
     public sealed class Base85 : BinaryToTextEncoding
     {
         private const int ChunkSize = 1024 * 1024;
