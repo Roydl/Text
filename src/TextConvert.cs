@@ -17,7 +17,13 @@
         public static string Rot13(string text)
         {
             ArgumentNullException.ThrowIfNull(text);
-            return text.Any(TextVerify.IsAsciiLetter) ? new string(text.Select(Rot13).ToArray()) : text;
+            if (!text.Any(TextVerify.IsAsciiLetter))
+                return text;
+            return string.Create(text.Length, text, static (span, src) =>
+            {
+                for (var i = 0; i < src.Length; i++)
+                    span[i] = Rot13(src[i]);
+            });
         }
 
         /// <summary>Rotates the specified character by 13 characters if it is an ASCII letter, otherwise the original character is returned.</summary>
@@ -180,9 +186,9 @@
                     return text;
             }
             using var msi = new MemoryStream(Encoding.UTF8.GetBytes(text));
-            using var mso = new MemoryStream();
+            using var mso = new MemoryStream(msi.Capacity);
             FormatSeparators(msi, mso, separator, maxInRow);
-            return Encoding.UTF8.GetString(mso.ToArray());
+            return Encoding.UTF8.GetString(mso.GetBuffer(), 0, (int)mso.Length);
         }
     }
 }
