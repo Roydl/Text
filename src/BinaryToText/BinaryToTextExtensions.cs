@@ -48,23 +48,28 @@
         /// <returns>A cached instance of the specified encoder.</returns>
         public static BinaryToTextEncoding GetDefaultInstance(this BinToTextEncoding encoder)
         {
+            var instances = _cachedInstances;
+            if (instances == null)
+            {
+                var created = new BinaryToTextEncoding[Enum.GetValues<BinToTextEncoding>().Length];
+                instances = Interlocked.CompareExchange(ref _cachedInstances, created, null) ?? created;
+            }
             var i = (int)encoder;
-            while (_cachedInstances == null)
-                Interlocked.CompareExchange(ref _cachedInstances, new BinaryToTextEncoding[Enum.GetValues(typeof(BinToTextEncoding)).Length], null);
-            while (_cachedInstances[i] == null)
-                Interlocked.CompareExchange(ref _cachedInstances[i], encoder switch
-                {
-                    BinToTextEncoding.Base02 => new Base02(),
-                    BinToTextEncoding.Base08 => new Base08(),
-                    BinToTextEncoding.Base10 => new Base10(),
-                    BinToTextEncoding.Base16 => new Base16(),
-                    BinToTextEncoding.Base32 => new Base32(),
-                    BinToTextEncoding.Base64 => new Base64(),
-                    BinToTextEncoding.Base85 => new Base85(),
-                    BinToTextEncoding.Base91 => new Base91(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(encoder), encoder, null)
-                }, null);
-            return _cachedInstances[i];
+            if (instances[i] != null)
+                return instances[i];
+            Interlocked.CompareExchange(ref instances[i], encoder switch
+            {
+                BinToTextEncoding.Base02 => new Base02(),
+                BinToTextEncoding.Base08 => new Base08(),
+                BinToTextEncoding.Base10 => new Base10(),
+                BinToTextEncoding.Base16 => new Base16(),
+                BinToTextEncoding.Base32 => new Base32(),
+                BinToTextEncoding.Base64 => new Base64(),
+                BinToTextEncoding.Base85 => new Base85(),
+                BinToTextEncoding.Base91 => new Base91(),
+                _ => throw new ArgumentOutOfRangeException(nameof(encoder), encoder, null)
+            }, null);
+            return instances[i];
         }
 
         /// <param name="text">The string to encode.</param>
