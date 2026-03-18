@@ -21,7 +21,14 @@
         <PackageId>Roydl.Text</PackageId>
         <Product>Roydl.Text</Product>
         <PackageReleaseNotes>- Add full support for .NET 10.0
-- Removed support for older .NET versions as they have already reached EOL or will soon reach it
+- Removed support for older .NET versions that have reached or will soon reach EOL
+- All binary-to-text encodings rewritten for maximum throughput using Parallel.For, double-buffered I/O, and ArrayPool&lt;byte&gt;
+- AVX2 and AVX-512 SIMD acceleration added for Base-2, Base-8, Base-10, Base-16, Base-32, Base-85
+- Base-64 parallelized on top of .NET's built-in hardware-accelerated System.Buffers.Text.Base64
+- Base-32 encoding correctness fixed per RFC 4648
+- Base-91 gains from chunk-based I/O and reverse lookup table
+- Helper.GetBufferSize hardened for non-seekable streams
+- TextConvert.Rot13 and FormatSeparators allocation improvements
         </PackageReleaseNotes>
         <AppDesignerFolder>Resources</AppDesignerFolder>
         <Title>Roy's Dynamic-Link Libraries – Text Encoding and more</Title>
