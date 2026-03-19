@@ -101,7 +101,7 @@ Each encoding is benchmarked using stream reuse to eliminate allocation overhead
 ---
 
 ## Usage
-```cs
+```csharp
 // Encode — value can be string or byte[]
 // BinToTextEncoding defaults to Base64 if not specified
 string encoded = value.Encode(BinToTextEncoding.Base85);
