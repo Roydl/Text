@@ -10,17 +10,21 @@
         <Company>Roy Schroedel</Company>
         <Authors>Roy Schroedel</Authors>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-        <Description>Provides functions for encoding and decoding base 2, 8, 10, 16, 32, 64, 85 and 91 and more.</Description>
+        <Description>Provides high-performance binary-to-text encoding and decoding for Base-2, Base-8, Base-10, Base-16, Base-32, Base-64, Base-85, and Base-91.</Description>
         <PackageProjectUrl>https://github.com/Roydl/Text</PackageProjectUrl>
         <PackageIcon>LOGO.png</PackageIcon>
         <RepositoryUrl>https://github.com/Roydl/Text</RepositoryUrl>
-        <PackageTags>encoding decoding base2 base8 base10 base16 base32 base64 base85 base91</PackageTags>
+        <PackageTags>encoding decoding binary-to-text binary octal decimal hex ascii85 base2 base8 base10 base16 base32 base64 base85 base91 avx2 avx512 simd</PackageTags>
         <SignAssembly>false</SignAssembly>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <PackageId>Roydl.Text</PackageId>
         <Product>Roydl.Text</Product>
-        <PackageReleaseNotes>- Add full support for .NET 10.0
+        <PackageReleaseNotes>v1.1.1
+- Fixed Base64 decode dropping the last byte(s) when encoded data contains padding
+
+v1.1.0
+- Add full support for .NET 10.0
 - Removed support for older .NET versions that have reached or will soon reach EOL
 - All binary-to-text encodings rewritten for maximum throughput using Parallel.For, double-buffered I/O, and ArrayPool&lt;byte&gt;
 - AVX2 and AVX-512 SIMD acceleration added for Base-2, Base-8, Base-10, Base-16, Base-32, Base-85
@@ -33,8 +37,8 @@
         <AppDesignerFolder>Resources</AppDesignerFolder>
         <Title>Roy's Dynamic-Link Libraries – Text Encoding and more</Title>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <FileVersion>1.1.0</FileVersion>
+        <AssemblyVersion>1.1.1</AssemblyVersion>
+        <FileVersion>1.1.1</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
