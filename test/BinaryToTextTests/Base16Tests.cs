@@ -208,6 +208,21 @@
         }
 
         [Test]
+        [Category("Method")]
+        public void IncrementalRandomStringEncodeDecode()
+        {
+            var sb = new StringBuilder();
+            for (var len = 1; len <= 10000; len++)
+            {
+                sb.Append((char)TestVars.Randomizer.Next(32, 127));
+                var original = sb.ToString();
+                var encoded = _instance.EncodeString(original);
+                var decoded = _instance.DecodeString(encoded);
+                Assert.AreEqual(original, decoded, $"Roundtrip failed at length {len}");
+            }
+        }
+
+        [Test]
         [Category("LineLength")]
         public void LineLengthEncodeDecode()
         {
