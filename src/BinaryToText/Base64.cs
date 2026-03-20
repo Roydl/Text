@@ -182,6 +182,9 @@
                     var cur = 0;
                     var bytesRead = ReadBuffer(bsi, inputBufs[cur]);
 
+                    Span<byte> partialTmp = stackalloc byte[4];
+                    Span<byte> partialOut = stackalloc byte[3];
+
                     while (bytesRead > 0 || leftoverLen > 0)
                     {
                         var isLastBatch = bytesRead < inputSize;
@@ -195,7 +198,7 @@
                         for (var i = 0; i < bytesRead; i++)
                         {
                             var b = inputBufs[slot][i];
-                            if (IsSkippable(b) || Separator.Span.Contains(b))
+                            if (IsSkippable(b) || Separator.Span.Contains(b) || b == '=')
                                 continue;
                             if (b != '=' && ReverseTable[b] == -1)
                                 throw new DecoderFallbackException(string.Format(ExceptionMessages.CharIsInvalid, (char)b));
@@ -265,6 +268,23 @@
                                 for (var i = 0; i < num; i++)
                                     bso.Write(outputBufs[slot], bounds[i] * 3, chunkSizes[slot][i]);
                             });
+                        }
+
+                        // Phase 3: Final partial group — only on the last batch
+                        if (isLastBatch && compactLen % 4 > 0)
+                        {
+                            pending?.Wait();
+                            pending = null;
+
+                            var partialLen = compactLen % 4;
+                            for (var k = 0; k < partialLen; k++)
+                                partialTmp[k] = compactBufs[slot][totalGroups * 4 + k];
+                            for (var k = partialLen; k < 4; k++)
+                                partialTmp[k] = (byte)'=';
+
+                            NetBase64.DecodeFromUtf8(partialTmp, partialOut, out _, out var written);
+                            for (var k = 0; k < written; k++)
+                                bso.WriteByte(partialOut[k]);
                         }
 
                         if (bytesRead == 0)
